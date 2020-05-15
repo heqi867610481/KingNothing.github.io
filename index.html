@@ -64,6 +64,50 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-paper2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/" class="article-date">
+  <time datetime="2020-05-15T11:23:24.000Z" itemprop="datePublished">2020-05-15</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/">论文笔记：2   Fooling automated surveillance cameras：adversarial patches to attack person detection</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>BGM：Swan Lake – Dark Moor（这溢出耳机的黑魔法气息！）</p>
+<h1 id="1-概述"><a href="#1-概述" class="headerlink" title="1 概述"></a>1 概述</h1><p>论文的源码<a href="https://gitlab.com/EAVISE/adversarial-yolo" target="_blank" rel="noopener">https://gitlab.com/EAVISE/adversarial-yolo
+</a><br>首先说这个论文应该是把对抗样本应用到real-world的一个例子。他生成了一个patch（40cm x40cm）可以打印出来挂到身上来躲避person detection。一个难点或者创新点是人类具有intra-class variety，就是说同属于人类看起来差别很大，对比一下路边的stop路标。而且人的background也啥都有，而路标的背景就比较固定。论文针对的是YOLOv2物体检测。</p>
+<h1 id="2-相关工作"><a href="#2-相关工作" class="headerlink" title="2 相关工作"></a>2 相关工作</h1><p>首先关于对分类的对抗攻击，按历史列出了几个比较重要的思路。1）Szegedy et al. 通过稍微改变图片的像素值使得分类错误，找的是最优；2）Goodfellow et al. 通过faster gradient sign，使得更快生成对抗图片样本。找的不是最优，而是在一堆图片中找个能攻击的就好；3）CW；4）Brown et al. 的做法感觉和这篇论文比较接近。也是生成patch贴在图片上（digitally），而且为了应对intra-class variety，用了一堆图片实验；5）Evtimov et al. 针对stop路标做了相似的real-word攻击；6）Athalye et al. 把攻击样本3D打印出来了，为了鲁棒性，考虑到了图片有不同的pose和光线变化；7）MoosaviDezfooli 做的对不同detector都很鲁棒的通用的对抗图片。</p>
+<h1 id="3-YOLO以及YOLOv2以及SSD"><a href="#3-YOLO以及YOLOv2以及SSD" class="headerlink" title="3 YOLO以及YOLOv2以及SSD"></a>3 YOLO以及YOLOv2以及SSD</h1><h2 id="3-1-YOLO"><a href="#3-1-YOLO" class="headerlink" title="3.1 YOLO"></a>3.1 YOLO</h2><p>YOU ONLY LOOK ONCE！属于一种单点目标检测器（single shot object detectors ）。bounding box，object score，class score经过一遍网络后都直接输出。</p>
+<h2 id="3-2-YOLOv2"><a href="#3-2-YOLOv2" class="headerlink" title="3.2 YOLOv2"></a>3.2 YOLOv2</h2><p>YOLOv2结构是全卷积的，图片经过网络后成了小了32倍的输出网格。对于每个网格，有五（默认）个不同纵横比的anchor box，每个anchor box都包括一个向量[x,y,w,h,pobj,p1,…,pn]。x，y是bounding box的中心相对于当前这个anchor box的概率。w，h是bounding box的高和宽；pobj是这个anchor box有物体的概率。pn是通过交叉熵损失得到的第n类的class score。</p>
+<h2 id="3-3-SSD"><a href="#3-3-SSD" class="headerlink" title="3.3 SSD"></a>3.3 SSD</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/" data-id="cka8794px00007scp7la3g2n1" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-paper1" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/14/paper1/" class="article-date">
@@ -202,6 +246,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/">论文笔记：2   Fooling automated surveillance cameras：adversarial patches to attack person detection</a>
+          </li>
         
           <li>
             <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/14/paper1/">论文笔记：1   Face-Off：Adversarial Face Obfuscation</a>
