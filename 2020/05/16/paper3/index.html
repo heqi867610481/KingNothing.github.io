@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>论文笔记：3   Adversarial Attacks on Convolutional Neural Networks in Facial Recognition Domain | </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="BGM：Heart’s Desire – Dreamtale 1 论文概述首先应用FGSM对人脸图片添加扰动，并在在自己训练的不同分类器上测试了效果，以验证可移植性（白盒）。接下来又精心构造了一些攻击算法（偏黑盒），针对的是untargeted黑盒，目的是评估人脸识别领域的DNN的鲁棒性。具体有三种方式：给最优的一个像素改变很大值；给所有像素值改变一个很小值；或者二者结合。最后结果是第二种方式明显">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文笔记：3   Adversarial Attacks on Convolutional Neural Networks in Facial Recognition Domain">
+<meta property="og:url" content="https://heqi867610481.github.io/KingNothing.github.io/2020/05/16/paper3/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="BGM：Heart’s Desire – Dreamtale 1 论文概述首先应用FGSM对人脸图片添加扰动，并在在自己训练的不同分类器上测试了效果，以验证可移植性（白盒）。接下来又精心构造了一些攻击算法（偏黑盒），针对的是untargeted黑盒，目的是评估人脸识别领域的DNN的鲁棒性。具体有三种方式：给最优的一个像素改变很大值；给所有像素值改变一个很小值；或者二者结合。最后结果是第二种方式明显">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-05-16T02:22:52.000Z">
+<meta property="article:modified_time" content="2020-05-16T13:01:08.564Z">
+<meta property="article:author" content="Meiyi Jiang">
+<meta property="article:tag" content="论文">
+<meta property="article:tag" content="对抗样本生成">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="https://heqi867610481.github.io/KingNothing.github.io/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="https://heqi867610481.github.io/KingNothing.github.io/" id="logo"></a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="https://heqi867610481.github.io/KingNothing.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://heqi867610481.github.io/KingNothing.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-paper3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/16/paper3/" class="article-date">
+  <time datetime="2020-05-16T02:22:52.000Z" itemprop="datePublished">2020-05-16</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      论文笔记：3   Adversarial Attacks on Convolutional Neural Networks in Facial Recognition Domain
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>BGM：Heart’s Desire – Dreamtale</p>
+<h1 id="1-论文概述"><a href="#1-论文概述" class="headerlink" title="1 论文概述"></a>1 论文概述</h1><p>首先应用FGSM对人脸图片添加扰动，并在在自己训练的不同分类器上测试了效果，以验证可移植性（白盒）。接下来又精心构造了一些攻击算法（偏黑盒），针对的是untargeted黑盒，目的是评估人脸识别领域的DNN的鲁棒性。具体有三种方式：给最优的一个像素改变很大值；给所有像素值改变一个很小值；或者二者结合。最后结果是第二种方式明显要好，而且即使是最高水平的扰动，扰动后的图片也是对于人类可识别的。论文关注的一个问题是：对于人脸识别是否有特别的特征可以让攻击更成功或者更不成功。</p>
+<h1 id="2-相关背景"><a href="#2-相关背景" class="headerlink" title="2 相关背景"></a>2 相关背景</h1><p>主要是这里提到了Papernot, et al. 的工作，值得注意下。他们先是有篇论文设计了一种攻击可以误分类到某个特定的类别。并且平均对每个样本的输入特征只改动4.02%就能达到97%的攻击成功率。然后他们又发篇论文提出了“Defensive Distillation”的防卫机制来预防对抗攻击。方法是降低对抗样本生成用到的梯度，用一个10^30的因子。论文又提到了目前效果最好的CW基于L2范式的白盒攻击。即使对于应用了“Defensive Distillation”的网络也有极高的攻击成功概率。</p>
+<h1 id="3-提到的数据集"><a href="#3-提到的数据集" class="headerlink" title="3 提到的数据集"></a>3 提到的数据集</h1><p>the Extended Yale Face Database B cropped image database。38个人，每人65张照片，共2470张在不同的光照条件下。168x192的灰度图。</p>
+<h1 id="4-提到的算法"><a href="#4-提到的算法" class="headerlink" title="4 提到的算法"></a>4 提到的算法</h1><p>FGSM（Fast Gradient Sign Method）。在损失的梯度的方向上加扰动来最大化分类的损失函数。是白盒模型，知道包括分类结果的置信水平，权重，参数这些。</p>
+<h1 id="5-实验设计"><a href="#5-实验设计" class="headerlink" title="5 实验设计"></a>5 实验设计</h1><p>先用谷歌的Inception v3 CNN在Yale B数据集上训练了一个模型。用了一个特征提取模型：神经网络的前几层在 ImageNet数据集上训练，学习从原始数据中获得有助于分类的有效特征；然后后面的几层被训练输出分类，其输入是用户提供的特定训练集的提取的特征。（这个操作有点迷，是通用的操作吗？）（TensorFlow实现）<br>首先是FGSM部分。用FGSM算法针对Papernot, et al.设计的分类器模型，用的数据集是本篇paper之前提到的并处理好的。这样生成扰动后数据来测试他们自己的模型，目的是测试可移植性，发现效果不佳，不如他们自己设计的攻击。<br>接下来就是他们自己设计的攻击啦。</p>
+<h2 id="5-1-方式一"><a href="#5-1-方式一" class="headerlink" title="5.1 方式一"></a>5.1 方式一</h2><p>这里主要想找一下是否存在这样一个像素点，单单改变这个像素点的值比改变其他像素点对分类的置信水平影响相对比较大。于是他们是这么做的。对每一个图片，分成56个24x24的格子。对于每一个格子，每次随机找个一像素值改变（by128mod255）然后送去看分类效果。对56次都跑完之后，选使特定类置信水平下降最多的一个（攻击A）或者两个（攻击B）像素点。除了A和B，还有攻击C，C是在攻击A的基础上再迭代一次重复这个过程。</p>
+<h2 id="5-2-方式二"><a href="#5-2-方式二" class="headerlink" title="5.2 方式二"></a>5.2 方式二</h2><p>就是改变每一个像素点的方式。一开始做的改变都是同一个方向的，意思就是都变量或者都变暗（过程是迭代的），但结果这样效果不佳，往往到最后人类就不可识别了。后来就采用一种棋盘式方法，相邻像素一个加一个减。根据随机改变的数值的范围不同，确定了攻击DEF。（D改变30<del>60加或减，E60</del>90，F120~150。）值得注意的是大多数图片在较小的变动范围内都能取得较好的误分类结果，但是仍有少数图片在变动较大时也不能导致误分类。如果分类器当时训练的时候数据集更大更多样一些，这种情况会少。</p>
+<h2 id="5-3-方式三"><a href="#5-3-方式三" class="headerlink" title="5.3 方式三"></a>5.3 方式三</h2><p>二者结合的方式，先实行攻击D，然后在生成的攻击图片基础上实行攻击B（称为攻击G）。</p>
+<h1 id="6-结果评估"><a href="#6-结果评估" class="headerlink" title="6 结果评估"></a>6 结果评估</h1><p>衡量攻击的成功与否有两个指标：1）ConfA：攻击样本输出结果的正确分类的置信水平下降程度，相比于正常样本的置信水平。2）误分类百分比：就是测试集里实施攻击后误分类的样本占比。<br>实验结果是改变大多数比改变一两个效果明显好，耗时也短。但是paper贼心不死的说，也许用一种更好的像素搜寻方法，基于单个像素点的攻击可能会更成功。因为可能更能找到局部最优扰动。攻击方式一虽然不太能导致误分类，但是确实使置信水平大幅下降。这种方式现实生活中可能也不那么实际，因为攻击者往往得不到模型的置信水平返回。paper最后也没找到人脸哪部分区域的像素值改变对置信水平影响更大。<br>攻击二会让图片看起来有点像素化，而且在改动比较大的范围内，会有肉眼可见的变化，虽然还能看出来是个人脸。<br>攻击三效果比D好了一点点而已，甚至没超过E。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/05/16/paper3/" data-id="cka9n3cs80000d8cp8wom47k8" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">论文笔记：2   Fooling automated surveillance cameras：adversarial patches to attack person detection</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 10px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 10px;">论文</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/16/paper3/">论文笔记：3   Adversarial Attacks on Convolutional Neural Networks in Facial Recognition Domain</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/">论文笔记：2   Fooling automated surveillance cameras：adversarial patches to attack person detection</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/14/paper1/">论文笔记：1   Face-Off：Adversarial Face Obfuscation</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/14/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Meiyi Jiang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="https://heqi867610481.github.io/KingNothing.github.io/fancybox/jquery.fancybox.css">
+
+  
+<script src="https://heqi867610481.github.io/KingNothing.github.io/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="https://heqi867610481.github.io/KingNothing.github.io/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
