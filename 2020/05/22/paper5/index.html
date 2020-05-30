@@ -15,7 +15,7 @@
 <meta property="og:description" content="BGM：Crimson Bow and Arrow – Epica 1 论文总体思路现存的输入不可知的对抗性扰动展示了一种有趣但现在无法解释的视觉模式。本篇论文引入了一种结构化的程序噪声函数来生成通用对抗扰动（UAP）的方法。这种方法在计算机图形化中广泛应用并且被设计为可参数化的。这种方式生成的噪声图样和现存的通用对抗扰动在视觉上有着相似性。此方法揭示了现在流行的DCN架构（比如Inception">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-05-22T02:37:58.000Z">
-<meta property="article:modified_time" content="2020-05-27T14:11:53.700Z">
+<meta property="article:modified_time" content="2020-05-28T03:07:30.643Z">
 <meta property="article:author" content="Meiyi Jiang">
 <meta property="article:tag" content="论文">
 <meta property="article:tag" content="对抗样本生成">
@@ -103,7 +103,7 @@
 <h2 id="5-3-针对特定输入的黑盒攻击"><a href="#5-3-针对特定输入的黑盒攻击" class="headerlink" title="5.3 针对特定输入的黑盒攻击"></a>5.3 针对特定输入的黑盒攻击</h2><p>这个实验针对模型原来能正确分类的图片中的一个子集，希望可以最大化子集的规避率，衡量指标有成功率和平均查询次数。在这个实验中，允许攻击者得到模型的输出概率向量，并使用松散GP来更好的对贝叶斯优化进行缩放，因为标准的GP是是对观察次数按立方缩放。实验结果来看，贝叶斯优化法的结果很优秀，平均7次查询就能达到91.6%的成功率，L-BFGS表现很差，他会陷在局部最优之中浪费掉很多查询机会，需要在不同的初始点重启多次。</p>
 <h2 id="5-4-和Ilyas等人成果的比较"><a href="#5-4-和Ilyas等人成果的比较" class="headerlink" title="5.4 和Ilyas等人成果的比较"></a>5.4 和Ilyas等人成果的比较</h2><p>Ilyas等人的做法是把攻击描述成一个梯度估计的问题（就像基于梯度的白盒攻击），然后用一个匪帮优化的框架来解决。比较结果是当限制查询次数在千以内的话，程序噪声攻击很明显的优于他们的做法。大多数的方法是在图片所有维度进行搜索，几乎在足够的查询下是一定可以找到对抗样本的。bandit方法为了减少查询次数，对成功率有所牺牲，而程序噪声方法做的程度更深。当然程序噪声的做法也可以通过引入更多参数（比如使用不同的颜色图），来扩大搜索空间，但是这可能破坏它天然的高通用规避率。</p>
 <h1 id="6-程序噪声攻击YOLO-v3"><a href="#6-程序噪声攻击YOLO-v3" class="headerlink" title="6 程序噪声攻击YOLO v3"></a>6 程序噪声攻击YOLO v3</h1><p>目标检测模型YOLO v3属于SSD，意味着对输入图片一遍就得到预测结果，而比如FastR-CNN或FasterR-CNN，他们是基于region proposals的，处理速度并不如SSD类型的。数据集使用MS COCO数据集。这部分实验没有进一步应用优化算法，而是和4部分的实验比较相像。实验结果表明攻击的高成功率更有可能是由模型对扰动的敏感性引起的，而不是对质地的偏差。</p>
-<h1 id="7-未来方向总结"><a href="#7-未来方向总结" class="headerlink" title="7 未来方向总结"></a>7 未来方向总结</h1><p>1）对于其他应用（语音识别，NLP，强化学习）寻找程序噪声的类似物。作为开始，可以通过寻找使隐藏层差别最大化的扰动开始，比如通过Singular Vector Attack或者对DCN的浅层特征视觉化来推断模型学到的浅层特征。<br>2）可以最小化小扰动的影响的输入不可知的防御可能在降低模型的敏感度上很有效，而不用专门针对各种攻击来训练。比如论文最后尝试了一下降噪这个手段。用特别的过滤器来降噪是信号处理的一个通常的预处理手段。比如中值滤波。中值滤波是一种平滑操作，将每个输入的值代替为他邻居们的值的中位数，通常既保留了边，也移除了噪声。这种做法平滑了高频噪声，而高频噪声又和Perlin噪声的规避率有很高相关。论文做了实验，在Inception v3模型前加了中值滤波过滤器的预处理步骤。实验结果规避率有所下降，尽管没有下降很多。未来的工作希望可以尝试别的降噪算法，比如模型压缩，Jacobian正则化等。<br>附：图像降噪算法总结和具体实现<br>[<a href="https://blog.csdn.net/u013185349/article/details/87934745][https://blog.csdn.net/u013185349/article/details/87934745]" target="_blank" rel="noopener">https://blog.csdn.net/u013185349/article/details/87934745][https://blog.csdn.net/u013185349/article/details/87934745]</a><br>[<a href="https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art][https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art]" target="_blank" rel="noopener">https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art][https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art]</a></p>
+<h1 id="7-未来方向总结"><a href="#7-未来方向总结" class="headerlink" title="7 未来方向总结"></a>7 未来方向总结</h1><p>1）对于其他应用（语音识别，NLP，强化学习）寻找程序噪声的类似物。作为开始，可以通过寻找使隐藏层差别最大化的扰动开始，比如通过Singular Vector Attack或者对DCN的浅层特征视觉化来推断模型学到的浅层特征。<br>2）可以最小化小扰动的影响的输入不可知的防御可能在降低模型的敏感度上很有效，而不用专门针对各种攻击来训练。比如论文最后尝试了一下降噪这个手段。用特别的过滤器来降噪是信号处理的一个通常的预处理手段。比如中值滤波。中值滤波是一种平滑操作，将每个输入的值代替为他邻居们的值的中位数，通常既保留了边，也移除了噪声。这种做法平滑了高频噪声，而高频噪声又和Perlin噪声的规避率有很高相关。论文做了实验，在Inception v3模型前加了中值滤波过滤器的预处理步骤。实验结果规避率有所下降，尽管没有下降很多。未来的工作希望可以尝试别的降噪算法，比如模型压缩，Jacobian正则化等。<br>附：图像降噪算法总结和具体实现<br><a href="https://blog.csdn.net/u013185349/article/details/87934745" target="_blank" rel="noopener">https://blog.csdn.net/u013185349/article/details/87934745</a><br><a href="https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art" target="_blank" rel="noopener">https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art</a></p>
 
       
     </div>
@@ -118,6 +118,15 @@
   
     
 <nav id="article-nav">
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors
+        
+      </div>
+    </a>
   
   
     <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/17/paper4/" id="article-nav-older" class="article-nav-link-wrap">
@@ -173,6 +182,10 @@
       <ul>
         
           <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</a>
+          </li>
+        
+          <li>
             <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/22/paper5/">论文笔记：5   Procedural Noise Adversarial Examples for Black-Box Attacks on Deep Convolutional Networks</a>
           </li>
         
@@ -186,10 +199,6 @@
         
           <li>
             <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/">论文笔记：2   Fooling automated surveillance cameras：adversarial patches to attack person detection</a>
-          </li>
-        
-          <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/14/paper1/">论文笔记：1   Face-Off：Adversarial Face Obfuscation</a>
           </li>
         
       </ul>

@@ -64,6 +64,49 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-paper6" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/" class="article-date">
+  <time datetime="2020-05-30T09:25:15.000Z" itemprop="datePublished">2020-05-30</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-论文概述"><a href="#1-论文概述" class="headerlink" title="1 论文概述"></a>1 论文概述</h1><p>本文的对抗样本针对的是目标检测，而且做了在现实生活中的实验。论文将攻击提出两类：HA和AA。HA指的是隐藏攻击，指实际存在的物体逃避检测。AA指的是出现攻击，指让物体的图片海报被识别为一个实在的物体。针对HA，提出了特征干扰增强（feature-interference reinforcement，FIR）和增强现实限制生成（enhanced realistic constraints generation，ERG）两种方法来增强鲁棒性；针对AA，提出了nested-AE方法，结合了两种AE来对长距离和短距离进行攻击。此外，针对AA，还设计了不同的style，来使AA更不被发现。<br>实验结果表明生成的攻击可以在YOLO v3和faster-RCNN上超过SOTA的成果。同时也有很高的可移植性。可移植性部分实验了在其他黑盒模型上的表现，包括SSD（(Single Shot Detector），RFCN（Region based Fully Convolutional Network），和Mask RCNN。<br>之前的工作大多集中于数字空间的对图片分类器的攻击。最近，Tom et al.的研究将对抗样本拍照再输送图片<br>到分类器中，表明对抗攻击在物理世界的有效性。再最近，有一些在物理世界对抗目标检测的研究，他们提升AE的鲁棒性的主要方法是对AE进行变形，比如通过改变AE的大小来模仿不同的距离。但是这种办法能模拟的距离和角度很受限。所以现在需要的是AE在更长的距离和更广的角度起效。同时以往的研究在探究光线和背景对AE的影响方面也受限。所以本篇论文意图生成鲁棒的AE，可以面对不同距离、角度、光照等多种真实生活中的背景。<br>前文提到针对HA，提出了FIR和ERG两种方法。FIR具体指的是使生成的AE去影响隐藏层和最终层而不是仅仅影响最终的预测层。这样攻击者想隐藏的目标物体的特征就在分类过程中更早的被AE修改。ERG指的是用一系列合理的背景来自动生成对抗样本，即将合理的背景和形变后的目标物体合成在一起，这样生成的AE对现实世界的背景可以更鲁棒。<br>对于AA，提出的nested-AE，将不同距离的任务分解成两个任务：长距离的攻击和短距离的攻击，然后分别产生两个独立的AE，然后两个AE以一种嵌套的方式合成为1个AE。然后应用了前文提到的多种风格来使得AE效果更好，并且还应用了batch-variation来加速AE生成过程收敛。</p>
+<h1 id="2-背景知识"><a href="#2-背景知识" class="headerlink" title="2 背景知识"></a>2 背景知识</h1><p>1）目标检测算法大致可分为两种。两阶段的包括：faster RCNN、RCNN、SPPNet、fast RCNN、RFCN、Mask RCNN、,Light Head RCNN等。一阶段的包括DetectorNet、OverFeat、YOLO、YOLO V2和 YOLO 9000、SSD、YOLO V3。<br>2）YOLO v3较之前的版本，在对小物体检测上有很大改进。faster RCNN作为一个两阶段的检测模型，包括一个对区域建议和特定类别分类的预处理步骤来确定类别。faster RCNN较之前版本的改进是用一个独立的网络来做区域建议，来代替传统的很耗时的做法，即在特征图上用选择性搜索算法来确定区域推荐。</p>
+<h1 id="3-攻击模型"><a href="#3-攻击模型" class="headerlink" title="3 攻击模型"></a>3 攻击模型</h1><p>这篇论文首先针对的是白盒对抗攻击，之后也在黑盒模型上做了实验来测试可移植性。</p>
+<h2 id="3-1-Feature-interference-Reinforcement"><a href="#3-1-Feature-interference-Reinforcement" class="headerlink" title="3.1 Feature-interference Reinforcement"></a>3.1 Feature-interference Reinforcement</h2><p>生成对抗样本的大多数做法是设计损失函数来最小化深度学习模型预测的值和预计希望的值的差别。而本文的做法除了误导预测的结果值，设计的损失函数同样也让AE能够在隐藏层扰动物体的特征。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/30/paper6/images/7.jpg" alt="FIR损失函数"><br>如图所示，x和x<code>的差别仅在于x</code>是对抗样本，添加了扰动。计算损失函数的步骤首先1）将图片输入到DNN模型中；2）两边分别从隐藏层提取出特征Qn和Q<code>n。因为更关心和目标物体相关的那部分特征，所以从这个特征图中按照比例的提取出相关的部分；3）对Qn和Q</code>n进行池化操作v和v<code>，将其从两个n*n*c的，转化为俩个c长度的向量，然后对其进行标准化4）通过函数lossf=sum|v-v</code>|**2来衡量隐藏层特征的差异。最终的损失函数包含三个部分。一个是刚才提到的lossf的倒数，一个是预测输出的边框的置信度，还有一个是预测输出了对所有类的概率分布向量，三者用因子平衡。通过最小化这个损失函数，实验结果证明有效的增强了AE的鲁棒性，对于距离和角度的提升增加了7%。<br>当然为了减少目标函数的复杂度，并不是取所有的隐藏层，而是选择了部分。比如YOLO v3模型，它包含特征分离部分和检测部分。为了提取不同规模的特征，隐藏层可以被分成几组，每一组提取不同尺寸的特征图。在每一组之内连续的隐藏层提取相同尺寸的特征图，因此对于YOLO v3模型而言，就可以只选择每一组的最后一个隐藏层。</p>
+<h2 id="3-2-Enhanced-Realistic-Constraints-Generation"><a href="#3-2-Enhanced-Realistic-Constraints-Generation" class="headerlink" title="3.2 Enhanced Realistic Constraints Generation"></a>3.2 Enhanced Realistic Constraints Generation</h2><p>在之前的工作中，对于构造现实世界中的对抗攻击，Expectation over Transformations（EOT）会被应用。EOT指的是通过在优化中添加随机的扭曲形变，来使生成的扰动更鲁棒。但是用这种随机的形变来模拟现实生活中的情景是不够的。原因是目标检测器会学习到关于目标的合理背景和语意完整性的知识，即目标是不是在一个合理的环境下，是不是在一个合理的位置上，以及目标是否是完整的。<br>这种敏感性揭示了扰动的攻击效果其实没那么鲁棒。于是ERG就是通过生成更多符合现实的限制，来使得扰动更鲁棒。具体做法就是网上搜索得到相关的背景，对于背景中有目标物体的，提取出来，对其实施改变（透视法形变来模拟距离角度，灰度来模拟光照），再放回去；对于背景中没有目标物体的，先选择一个目标最有可能存在的地方，然后把各种改动后的目标物体贴上去。<br>除此之外，考虑到照相机和打印机色差，因为饱和度低的图片，打印机色彩失真小，因此设置色彩饱和度函数来限制扰动，即对于扰动的每一个像素，限制色彩饱和度低于一个阈值。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/" data-id="ckatplm0i0000vccp2sjz2ek0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-paper5" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/22/paper5/" class="article-date">
@@ -99,7 +142,7 @@
 <h2 id="5-3-针对特定输入的黑盒攻击"><a href="#5-3-针对特定输入的黑盒攻击" class="headerlink" title="5.3 针对特定输入的黑盒攻击"></a>5.3 针对特定输入的黑盒攻击</h2><p>这个实验针对模型原来能正确分类的图片中的一个子集，希望可以最大化子集的规避率，衡量指标有成功率和平均查询次数。在这个实验中，允许攻击者得到模型的输出概率向量，并使用松散GP来更好的对贝叶斯优化进行缩放，因为标准的GP是是对观察次数按立方缩放。实验结果来看，贝叶斯优化法的结果很优秀，平均7次查询就能达到91.6%的成功率，L-BFGS表现很差，他会陷在局部最优之中浪费掉很多查询机会，需要在不同的初始点重启多次。</p>
 <h2 id="5-4-和Ilyas等人成果的比较"><a href="#5-4-和Ilyas等人成果的比较" class="headerlink" title="5.4 和Ilyas等人成果的比较"></a>5.4 和Ilyas等人成果的比较</h2><p>Ilyas等人的做法是把攻击描述成一个梯度估计的问题（就像基于梯度的白盒攻击），然后用一个匪帮优化的框架来解决。比较结果是当限制查询次数在千以内的话，程序噪声攻击很明显的优于他们的做法。大多数的方法是在图片所有维度进行搜索，几乎在足够的查询下是一定可以找到对抗样本的。bandit方法为了减少查询次数，对成功率有所牺牲，而程序噪声方法做的程度更深。当然程序噪声的做法也可以通过引入更多参数（比如使用不同的颜色图），来扩大搜索空间，但是这可能破坏它天然的高通用规避率。</p>
 <h1 id="6-程序噪声攻击YOLO-v3"><a href="#6-程序噪声攻击YOLO-v3" class="headerlink" title="6 程序噪声攻击YOLO v3"></a>6 程序噪声攻击YOLO v3</h1><p>目标检测模型YOLO v3属于SSD，意味着对输入图片一遍就得到预测结果，而比如FastR-CNN或FasterR-CNN，他们是基于region proposals的，处理速度并不如SSD类型的。数据集使用MS COCO数据集。这部分实验没有进一步应用优化算法，而是和4部分的实验比较相像。实验结果表明攻击的高成功率更有可能是由模型对扰动的敏感性引起的，而不是对质地的偏差。</p>
-<h1 id="7-未来方向总结"><a href="#7-未来方向总结" class="headerlink" title="7 未来方向总结"></a>7 未来方向总结</h1><p>1）对于其他应用（语音识别，NLP，强化学习）寻找程序噪声的类似物。作为开始，可以通过寻找使隐藏层差别最大化的扰动开始，比如通过Singular Vector Attack或者对DCN的浅层特征视觉化来推断模型学到的浅层特征。<br>2）可以最小化小扰动的影响的输入不可知的防御可能在降低模型的敏感度上很有效，而不用专门针对各种攻击来训练。比如论文最后尝试了一下降噪这个手段。用特别的过滤器来降噪是信号处理的一个通常的预处理手段。比如中值滤波。中值滤波是一种平滑操作，将每个输入的值代替为他邻居们的值的中位数，通常既保留了边，也移除了噪声。这种做法平滑了高频噪声，而高频噪声又和Perlin噪声的规避率有很高相关。论文做了实验，在Inception v3模型前加了中值滤波过滤器的预处理步骤。实验结果规避率有所下降，尽管没有下降很多。未来的工作希望可以尝试别的降噪算法，比如模型压缩，Jacobian正则化等。<br>附：图像降噪算法总结和具体实现<br>[<a href="https://blog.csdn.net/u013185349/article/details/87934745][https://blog.csdn.net/u013185349/article/details/87934745]" target="_blank" rel="noopener">https://blog.csdn.net/u013185349/article/details/87934745][https://blog.csdn.net/u013185349/article/details/87934745]</a><br>[<a href="https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art][https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art]" target="_blank" rel="noopener">https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art][https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art]</a></p>
+<h1 id="7-未来方向总结"><a href="#7-未来方向总结" class="headerlink" title="7 未来方向总结"></a>7 未来方向总结</h1><p>1）对于其他应用（语音识别，NLP，强化学习）寻找程序噪声的类似物。作为开始，可以通过寻找使隐藏层差别最大化的扰动开始，比如通过Singular Vector Attack或者对DCN的浅层特征视觉化来推断模型学到的浅层特征。<br>2）可以最小化小扰动的影响的输入不可知的防御可能在降低模型的敏感度上很有效，而不用专门针对各种攻击来训练。比如论文最后尝试了一下降噪这个手段。用特别的过滤器来降噪是信号处理的一个通常的预处理手段。比如中值滤波。中值滤波是一种平滑操作，将每个输入的值代替为他邻居们的值的中位数，通常既保留了边，也移除了噪声。这种做法平滑了高频噪声，而高频噪声又和Perlin噪声的规避率有很高相关。论文做了实验，在Inception v3模型前加了中值滤波过滤器的预处理步骤。实验结果规避率有所下降，尽管没有下降很多。未来的工作希望可以尝试别的降噪算法，比如模型压缩，Jacobian正则化等。<br>附：图像降噪算法总结和具体实现<br><a href="https://blog.csdn.net/u013185349/article/details/87934745" target="_blank" rel="noopener">https://blog.csdn.net/u013185349/article/details/87934745</a><br><a href="https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art" target="_blank" rel="noopener">https://github.com/wenbihan/reproducible-image-denoising-state-of-the-art</a></p>
 
       
     </div>
@@ -398,6 +441,10 @@
       <ul>
         
           <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</a>
+          </li>
+        
+          <li>
             <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/22/paper5/">论文笔记：5   Procedural Noise Adversarial Examples for Black-Box Attacks on Deep Convolutional Networks</a>
           </li>
         
@@ -411,10 +458,6 @@
         
           <li>
             <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/15/paper2/">论文笔记：2   Fooling automated surveillance cameras：adversarial patches to attack person detection</a>
-          </li>
-        
-          <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/14/paper1/">论文笔记：1   Face-Off：Adversarial Face Obfuscation</a>
           </li>
         
       </ul>
