@@ -7,19 +7,21 @@
   
   <title>论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1 论文概述本文的对抗样本针对的是目标检测，而且做了在现实生活中的实验。论文将攻击提出两类：HA和AA。HA指的是隐藏攻击，指实际存在的物体逃避检测。AA指的是出现攻击，指让物体的图片海报被识别为一个实在的物体。针对HA，提出了特征干扰增强（feature-interference reinforcement，FIR）和增强现实限制生成（enhanced realistic constraints">
+  <meta name="description" content="BGM：Other Side – MIYAVI （我爱洞哥！） 1 论文概述本文的对抗样本针对的是目标检测，而且做了在现实生活中的实验。论文将攻击提出两类：HA和AA。HA指的是隐藏攻击，指实际存在的物体逃避检测。AA指的是出现攻击，指让物体的图片海报被识别为一个实在的物体。针对HA，提出了特征干扰增强（feature-interference reinforcement，FIR）和增强现实限制生">
 <meta property="og:type" content="article">
 <meta property="og:title" content="论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors">
 <meta property="og:url" content="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/index.html">
 <meta property="og:site_name">
-<meta property="og:description" content="1 论文概述本文的对抗样本针对的是目标检测，而且做了在现实生活中的实验。论文将攻击提出两类：HA和AA。HA指的是隐藏攻击，指实际存在的物体逃避检测。AA指的是出现攻击，指让物体的图片海报被识别为一个实在的物体。针对HA，提出了特征干扰增强（feature-interference reinforcement，FIR）和增强现实限制生成（enhanced realistic constraints">
+<meta property="og:description" content="BGM：Other Side – MIYAVI （我爱洞哥！） 1 论文概述本文的对抗样本针对的是目标检测，而且做了在现实生活中的实验。论文将攻击提出两类：HA和AA。HA指的是隐藏攻击，指实际存在的物体逃避检测。AA指的是出现攻击，指让物体的图片海报被识别为一个实在的物体。针对HA，提出了特征干扰增强（feature-interference reinforcement，FIR）和增强现实限制生">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/30/paper6/images/7.jpg">
+<meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/30/paper6/images/8.jpg">
 <meta property="article:published_time" content="2020-05-30T09:25:15.000Z">
-<meta property="article:modified_time" content="2020-05-30T14:06:47.877Z">
+<meta property="article:modified_time" content="2020-05-31T11:06:32.910Z">
 <meta property="article:author" content="Meiyi Jiang">
 <meta property="article:tag" content="论文">
 <meta property="article:tag" content="对抗样本生成">
+<meta property="article:tag" content="目标检测">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/30/paper6/images/7.jpg">
   
@@ -92,11 +94,17 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="1-论文概述"><a href="#1-论文概述" class="headerlink" title="1 论文概述"></a>1 论文概述</h1><p>本文的对抗样本针对的是目标检测，而且做了在现实生活中的实验。论文将攻击提出两类：HA和AA。HA指的是隐藏攻击，指实际存在的物体逃避检测。AA指的是出现攻击，指让物体的图片海报被识别为一个实在的物体。针对HA，提出了特征干扰增强（feature-interference reinforcement，FIR）和增强现实限制生成（enhanced realistic constraints generation，ERG）两种方法来增强鲁棒性；针对AA，提出了nested-AE方法，结合了两种AE来对长距离和短距离进行攻击。此外，针对AA，还设计了不同的style，来使AA更不被发现。<br>实验结果表明生成的攻击可以在YOLO v3和faster-RCNN上超过SOTA的成果。同时也有很高的可移植性。可移植性部分实验了在其他黑盒模型上的表现，包括SSD（(Single Shot Detector），RFCN（Region based Fully Convolutional Network），和Mask RCNN。<br>之前的工作大多集中于数字空间的对图片分类器的攻击。最近，Tom et al.的研究将对抗样本拍照再输送图片<br>到分类器中，表明对抗攻击在物理世界的有效性。再最近，有一些在物理世界对抗目标检测的研究，他们提升AE的鲁棒性的主要方法是对AE进行变形，比如通过改变AE的大小来模仿不同的距离。但是这种办法能模拟的距离和角度很受限。所以现在需要的是AE在更长的距离和更广的角度起效。同时以往的研究在探究光线和背景对AE的影响方面也受限。所以本篇论文意图生成鲁棒的AE，可以面对不同距离、角度、光照等多种真实生活中的背景。<br>前文提到针对HA，提出了FIR和ERG两种方法。FIR具体指的是使生成的AE去影响隐藏层和最终层而不是仅仅影响最终的预测层。这样攻击者想隐藏的目标物体的特征就在分类过程中更早的被AE修改。ERG指的是用一系列合理的背景来自动生成对抗样本，即将合理的背景和形变后的目标物体合成在一起，这样生成的AE对现实世界的背景可以更鲁棒。<br>对于AA，提出的nested-AE，将不同距离的任务分解成两个任务：长距离的攻击和短距离的攻击，然后分别产生两个独立的AE，然后两个AE以一种嵌套的方式合成为1个AE。然后应用了前文提到的多种风格来使得AE效果更好，并且还应用了batch-variation来加速AE生成过程收敛。</p>
+        <p>BGM：Other Side – MIYAVI （我爱洞哥！）</p>
+<h1 id="1-论文概述"><a href="#1-论文概述" class="headerlink" title="1 论文概述"></a>1 论文概述</h1><p>本文的对抗样本针对的是目标检测，而且做了在现实生活中的实验。论文将攻击提出两类：HA和AA。HA指的是隐藏攻击，指实际存在的物体逃避检测。AA指的是出现攻击，指让物体的图片海报被识别为一个实在的物体。针对HA，提出了特征干扰增强（feature-interference reinforcement，FIR）和增强现实限制生成（enhanced realistic constraints generation，ERG）两种方法来增强鲁棒性；针对AA，提出了nested-AE方法，结合了两种AE来对长距离和短距离进行攻击。此外，针对AA，还设计了不同的style，来使AA更不被发现。<br>实验结果表明生成的攻击可以在YOLO v3和faster-RCNN上超过SOTA的成果。同时也有很高的可移植性。可移植性部分实验了在其他黑盒模型上的表现，包括SSD（(Single Shot Detector），RFCN（Region based Fully Convolutional Network），和Mask RCNN。<br>之前的工作大多集中于数字空间的对图片分类器的攻击。最近，Tom et al.的研究将对抗样本拍照再输送图片<br>到分类器中，表明对抗攻击在物理世界的有效性。再最近，有一些在物理世界对抗目标检测的研究，他们提升AE的鲁棒性的主要方法是对AE进行变形，比如通过改变AE的大小来模仿不同的距离。但是这种办法能模拟的距离和角度很受限。所以现在需要的是AE在更长的距离和更广的角度起效。同时以往的研究在探究光线和背景对AE的影响方面也受限。所以本篇论文意图生成鲁棒的AE，可以面对不同距离、角度、光照等多种真实生活中的背景。<br>前文提到针对HA，提出了FIR和ERG两种方法。FIR具体指的是使生成的AE去影响隐藏层和最终层而不是仅仅影响最终的预测层。这样攻击者想隐藏的目标物体的特征就在分类过程中更早的被AE修改。ERG指的是用一系列合理的背景来自动生成对抗样本，即将合理的背景和形变后的目标物体合成在一起，这样生成的AE对现实世界的背景可以更鲁棒。<br>对于AA，提出的nested-AE，将不同距离的任务分解成两个任务：长距离的攻击和短距离的攻击，然后分别产生两个独立的AE，然后两个AE以一种嵌套的方式合成为1个AE。然后应用了前文提到的多种风格来使得AE效果更好，并且还应用了batch-variation来加速AE生成过程收敛。</p>
+<a id="more"></a>
 <h1 id="2-背景知识"><a href="#2-背景知识" class="headerlink" title="2 背景知识"></a>2 背景知识</h1><p>1）目标检测算法大致可分为两种。两阶段的包括：faster RCNN、RCNN、SPPNet、fast RCNN、RFCN、Mask RCNN、,Light Head RCNN等。一阶段的包括DetectorNet、OverFeat、YOLO、YOLO V2和 YOLO 9000、SSD、YOLO V3。<br>2）YOLO v3较之前的版本，在对小物体检测上有很大改进。faster RCNN作为一个两阶段的检测模型，包括一个对区域建议和特定类别分类的预处理步骤来确定类别。faster RCNN较之前版本的改进是用一个独立的网络来做区域建议，来代替传统的很耗时的做法，即在特征图上用选择性搜索算法来确定区域推荐。</p>
 <h1 id="3-攻击模型"><a href="#3-攻击模型" class="headerlink" title="3 攻击模型"></a>3 攻击模型</h1><p>这篇论文首先针对的是白盒对抗攻击，之后也在黑盒模型上做了实验来测试可移植性。</p>
 <h2 id="3-1-Feature-interference-Reinforcement"><a href="#3-1-Feature-interference-Reinforcement" class="headerlink" title="3.1 Feature-interference Reinforcement"></a>3.1 Feature-interference Reinforcement</h2><p>生成对抗样本的大多数做法是设计损失函数来最小化深度学习模型预测的值和预计希望的值的差别。而本文的做法除了误导预测的结果值，设计的损失函数同样也让AE能够在隐藏层扰动物体的特征。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/30/paper6/images/7.jpg" alt="FIR损失函数"><br>如图所示，x和x<code>的差别仅在于x</code>是对抗样本，添加了扰动。计算损失函数的步骤首先1）将图片输入到DNN模型中；2）两边分别从隐藏层提取出特征Qn和Q<code>n。因为更关心和目标物体相关的那部分特征，所以从这个特征图中按照比例的提取出相关的部分；3）对Qn和Q</code>n进行池化操作v和v<code>，将其从两个n*n*c的，转化为俩个c长度的向量，然后对其进行标准化4）通过函数lossf=sum|v-v</code>|**2来衡量隐藏层特征的差异。最终的损失函数包含三个部分。一个是刚才提到的lossf的倒数，一个是预测输出的边框的置信度，还有一个是预测输出了对所有类的概率分布向量，三者用因子平衡。通过最小化这个损失函数，实验结果证明有效的增强了AE的鲁棒性，对于距离和角度的提升增加了7%。<br>当然为了减少目标函数的复杂度，并不是取所有的隐藏层，而是选择了部分。比如YOLO v3模型，它包含特征分离部分和检测部分。为了提取不同规模的特征，隐藏层可以被分成几组，每一组提取不同尺寸的特征图。在每一组之内连续的隐藏层提取相同尺寸的特征图，因此对于YOLO v3模型而言，就可以只选择每一组的最后一个隐藏层。</p>
 <h2 id="3-2-Enhanced-Realistic-Constraints-Generation"><a href="#3-2-Enhanced-Realistic-Constraints-Generation" class="headerlink" title="3.2 Enhanced Realistic Constraints Generation"></a>3.2 Enhanced Realistic Constraints Generation</h2><p>在之前的工作中，对于构造现实世界中的对抗攻击，Expectation over Transformations（EOT）会被应用。EOT指的是通过在优化中添加随机的扭曲形变，来使生成的扰动更鲁棒。但是用这种随机的形变来模拟现实生活中的情景是不够的。原因是目标检测器会学习到关于目标的合理背景和语意完整性的知识，即目标是不是在一个合理的环境下，是不是在一个合理的位置上，以及目标是否是完整的。<br>这种敏感性揭示了扰动的攻击效果其实没那么鲁棒。于是ERG就是通过生成更多符合现实的限制，来使得扰动更鲁棒。具体做法就是网上搜索得到相关的背景，对于背景中有目标物体的，提取出来，对其实施改变（透视法形变来模拟距离角度，灰度来模拟光照），再放回去；对于背景中没有目标物体的，先选择一个目标最有可能存在的地方，然后把各种改动后的目标物体贴上去。<br>除此之外，考虑到照相机和打印机色差，因为饱和度低的图片，打印机色彩失真小，因此设置色彩饱和度函数来限制扰动，即对于扰动的每一个像素，限制色彩饱和度低于一个阈值。</p>
+<h2 id="3-3-Nested-AEs"><a href="#3-3-Nested-AEs" class="headerlink" title="3.3 Nested AEs"></a>3.3 Nested AEs</h2><p>YOLO v3用了3种规模（大中小）来测量物体，这提高了物体的检测准确率，但是相比较测量大的和中的物体的那部分模型，测量小物体的模型（下文用Models代替）更容易受到欺骗，因为它依靠的像素更少因此特征也就更少。所以这一部分针对的就是这类Models，测量小物体的Models。当物体处于远距离时，物体往往可以全被检测到，而物体处于近距离时，仅仅物体的中间部分被检测到。（因为Object detector将每一个视频帧根据规模不同划分成mxn个格子。）所以Nested AEs就是当AE的尺寸小于等于一个阈值时，认为是一个长距离攻击，改变整个的AE；当AE的尺寸大于阈值时，认为是一个短距离攻击，仅仅改变AE的中心部分。公式表达如下。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/30/paper6/images/8.jpg" alt="Nested AEs"><br>Xi是AE最初的的随机噪声，Xadvi+1代表改变后的AE，J是Xi的梯度，Clip代表将像素点的范围限制在0~255。<br>Nested AEs在本文中是用于AA上的，所以他的损失函数应该设计的让目标物体的概率尽量高同时抑制其他的物体的概率。由于不同于普通的图片分类器，目标检测是要在每一帧里找到所有识别到的物体，所以应该首先定位AE出现的位置，然后基于这个位置设计损失函数。目标的识别结果是一个向量，其中index是Np。Np是用AE的尺寸和中心位置来计算的。计算完Np之后，损失函数由两部分组成，一个是1-Cbox，Cbox是在Np预测成框的置信概率（Cbox尽量大），一个是对预测成其他物体和目标的差值的求和（？honestly这公式表述真令人迷惑）（这部分尽量大）。然后损失函数要尽量小。</p>
+<h2 id="3-4-Style-customized-AEs"><a href="#3-4-Style-customized-AEs" class="headerlink" title="3.4 Style-customized AEs"></a>3.4 Style-customized AEs</h2><p>之前的研究也有人对扰动的形状什么的做过定制，目的是模仿现实生活中目标的毁损破坏。然后本文引入了更多风格（图案，形状，颜色，文本四方面）来模拟现实生活中的涂鸦或者小广告。这些操作同是针对AA。（AA的攻击是生成一张海报，然后放置在一个合理的地方，而HA的攻击是把生成的扰动贴在目标物体上。）<br>1）图案：目标是生成有着特定图案比如钟表样子的AE。做法是利用目标检测器自己来生成AE的图案。图案的损失函数计算使图案的目标类别在预测中的概率尽量大。<br>2）形状：形状的控制就是在扰动上面加掩码（01矩阵）。<br>3）颜色：也是通过目标函数来控制。<br>4）文本：形状和颜色的结合。</p>
+<h2 id="3-5-batch-variation"><a href="#3-5-batch-variation" class="headerlink" title="3.5 batch-variation"></a>3.5 batch-variation</h2><p>为了使收敛更快，采用了batch-variation，对于各个损失函数的各个梯度，取其平均值。用平均梯度可以平稳的更新方向并减少对现实限制的过拟合。更进一步说，减少过拟合也降低了AE对模型的依赖，也有助于提高可移植性。</p>
+<p>实验评估部分就先不花时间总结了，真要做到和这个相关的再参考吧。</p>
 
       
     </div>
@@ -104,7 +112,7 @@
       <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/" data-id="ckatplm0i0000vccp2sjz2ek0" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
 
     </footer>
   </div>
@@ -134,7 +142,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
     </div>
   </div>
 
@@ -144,7 +152,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 15px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 15px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 10px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
     </div>
   </div>
 
