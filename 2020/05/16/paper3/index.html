@@ -15,10 +15,11 @@
 <meta property="og:description" content="BGM：Heart’s Desire – Dreamtale 1 论文概述首先应用FGSM对人脸图片添加扰动，并在在自己训练的不同分类器上测试了效果，以验证可移植性（白盒）。接下来又精心构造了一些攻击算法（偏黑盒），针对的是untargeted黑盒，目的是评估人脸识别领域的DNN的鲁棒性。具体有三种方式：给最优的一个像素改变很大值；给所有像素值改变一个很小值；或者二者结合。最后结果是第二种方式明显">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-05-16T02:22:52.000Z">
-<meta property="article:modified_time" content="2020-05-16T13:01:08.564Z">
+<meta property="article:modified_time" content="2020-05-31T11:14:15.416Z">
 <meta property="article:author" content="Meiyi Jiang">
 <meta property="article:tag" content="论文">
 <meta property="article:tag" content="对抗样本生成">
+<meta property="article:tag" content="人脸识别">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="" type="application/atom+xml">
@@ -92,6 +93,7 @@
       
         <p>BGM：Heart’s Desire – Dreamtale</p>
 <h1 id="1-论文概述"><a href="#1-论文概述" class="headerlink" title="1 论文概述"></a>1 论文概述</h1><p>首先应用FGSM对人脸图片添加扰动，并在在自己训练的不同分类器上测试了效果，以验证可移植性（白盒）。接下来又精心构造了一些攻击算法（偏黑盒），针对的是untargeted黑盒，目的是评估人脸识别领域的DNN的鲁棒性。具体有三种方式：给最优的一个像素改变很大值；给所有像素值改变一个很小值；或者二者结合。最后结果是第二种方式明显要好，而且即使是最高水平的扰动，扰动后的图片也是对于人类可识别的。论文关注的一个问题是：对于人脸识别是否有特别的特征可以让攻击更成功或者更不成功。</p>
+<a id="more"></a>
 <h1 id="2-相关背景"><a href="#2-相关背景" class="headerlink" title="2 相关背景"></a>2 相关背景</h1><p>主要是这里提到了Papernot, et al. 的工作，值得注意下。他们先是有篇论文设计了一种攻击可以误分类到某个特定的类别。并且平均对每个样本的输入特征只改动4.02%就能达到97%的攻击成功率。然后他们又发篇论文提出了“Defensive Distillation”的防卫机制来预防对抗攻击。方法是降低对抗样本生成用到的梯度，用一个10^30的因子。论文又提到了目前效果最好的CW基于L2范式的白盒攻击。即使对于应用了“Defensive Distillation”的网络也有极高的攻击成功概率。</p>
 <h1 id="3-提到的数据集"><a href="#3-提到的数据集" class="headerlink" title="3 提到的数据集"></a>3 提到的数据集</h1><p>the Extended Yale Face Database B cropped image database。38个人，每人65张照片，共2470张在不同的光照条件下。168x192的灰度图。</p>
 <h1 id="4-提到的算法"><a href="#4-提到的算法" class="headerlink" title="4 提到的算法"></a>4 提到的算法</h1><p>FGSM（Fast Gradient Sign Method）。在损失的梯度的方向上加扰动来最大化分类的损失函数。是白盒模型，知道包括分类结果的置信水平，权重，参数这些。</p>
@@ -107,7 +109,7 @@
       <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/05/16/paper3/" data-id="cka9n3cs80000d8cp8wom47k8" class="article-share-link">Share</a>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
 
     </footer>
   </div>
@@ -146,7 +148,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
     </div>
   </div>
 
@@ -156,7 +158,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 15px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 10px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
     </div>
   </div>
 

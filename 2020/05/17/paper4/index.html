@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/17/paper4/images/5.png">
 <meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/17/paper4/images/6.png">
 <meta property="article:published_time" content="2020-05-17T11:47:27.000Z">
-<meta property="article:modified_time" content="2020-05-19T14:39:35.427Z">
+<meta property="article:modified_time" content="2020-05-31T11:15:07.808Z">
 <meta property="article:author" content="Meiyi Jiang">
 <meta property="article:tag" content="论文">
 <meta property="article:tag" content="对抗攻击">
@@ -97,9 +97,9 @@
       
         <p>BGM：King Nothing – Metallica （今天没打鼓，良心痛。看一篇不太了解的领域的论文，换下口味。）</p>
 <h1 id="1-背景知识"><a href="#1-背景知识" class="headerlink" title="1 背景知识"></a>1 背景知识</h1><p>这篇论文是关于对基于图的分类的攻击的（好绕）。基于图的分类大致可分为这两种：Collective Classification和图神经网络（GNN）。然后这篇论文是针对Collective Classification这一类的。论文中说现在对抗攻击大多都是针对非图的算法，就算是针对图的，也是GNN比较多。对于某些特定的安全问题，Collective Classification效果要好一点 。在这里把论文提到的基于图分类的相关算法都列出学习一下。<br>先说一下数据的结构。给定的是一个图和训练集。图可以是有向图或者无向图。训练集是图上一部分标记为正节点和负节点的节点。基于图的分类就是要预测这些没标记的节点是正是负。</p>
+<a id="more"></a>
 <h2 id="1-1-Collective-Classification"><a href="#1-1-Collective-Classification" class="headerlink" title="1.1 Collective Classification"></a>1.1 Collective Classification</h2><p>Collective Classification基于训练集给每个点定义了一个前声誉得分（prior reputation score），接着给每条边分配或学习权重，然后然后在这个有权重的图里传播前声誉得分，来获得每个节点的后声誉得分（posterior）。后声誉得分被用来给没标签的节点分类。不同的CC方法用不同的方式定义前声誉得分，分配/学习边权重，以及传播前声誉得分。<br>常见的有这么几种：基于RW的，基于LBP的，基于LinLBP的，以及JWP方法。</p>
 <h3 id="1-1-1-基于RW的方法"><a href="#1-1-1-基于RW的方法" class="headerlink" title="1.1.1 基于RW的方法"></a>1.1.1 基于RW的方法</h3><p>首先关于前声誉得分，给标记为正节点的赋值为1，标记为负节点的赋值为0，还没标记的节点赋值为0.5。此外关于边的权重，赋值为同样的值或者赋值为用节点属性学习到的权重。最后，利用random walk在有权重的图中传播声誉得分。他们迭代的把一个节点的当前名誉得分，根据边的权重，按比例传播给邻居节点。然后节点的新的名誉得分，是邻居们的名誉得分总和。</p>
-<a id="more"></a>
 <h3 id="1-1-2-基于LBP的方法"><a href="#1-1-2-基于LBP的方法" class="headerlink" title="1.1.2 基于LBP的方法"></a>1.1.2 基于LBP的方法</h3><p>一般先给所有边赋相同的权重值。然后把图看作成对的马尔科夫随机场模型，然后利用LBP（Loopy Belief Propagation ）实现传播来获得后声誉得分。但是这一方法有两个众所周知的弊端：对于循环图不保证能收敛，以及不能缩放（因为包含每条边的信息）。LinLBP就是通过线性化了LBP来解决了这两个问题。</p>
 <h3 id="1-1-3-基于LinLBP的方法"><a href="#1-1-3-基于LinLBP的方法" class="headerlink" title="1.1.3 基于LinLBP的方法"></a>1.1.3 基于LinLBP的方法</h3><h3 id="1-1-4-JWP方法"><a href="#1-1-4-JWP方法" class="headerlink" title="1.1.4 JWP方法"></a>1.1.4 JWP方法</h3><p>JWP学习边的权重和传播声誉得分同时进行。给出当前的前声誉得分，JWP学习边权重使得1）下一次迭代中标记为正的节点后声誉得分大，而标记为负的节点后声誉得分小。2）如果一个边的两个顶点用当前的后声誉得分被预测有相同的标签，那么这条边就有较大的权重，反之则相反。有了学习到的边的权重，JWP就计算下一次迭代的后声誉得分，这个过程可以用基于LinLBP的传播。但是直接攻击JWP不太好攻击，因为边权重是学习到的。对图做增删操作的影响取决于JWP重新学习后的边权重。但是攻击LinLBP后可以移植到JWP上。</p>
 <h2 id="1-2-GNN"><a href="#1-2-GNN" class="headerlink" title="1.2 GNN"></a>1.2 GNN</h2><p>GNN则思路不同。GNN是给图数据生成神经网络，用各种方法学习基于图结构的特征向量，然后用特征向量来分类。细分又可以再分为两类。<br>一类是学习节点特征和分类同时进行，隐藏层的神经元代表节点的特征向量，而特征向量被用来在神经网络的最后一层去分类节点。神经网络的结构由图结构决定，比如代表一个特定节点的某一层的神经元和上一层的代表邻居节点的神经元相连。换句话说，神经网络迭代的计算一个节点的特征向量，通过聚合其邻居节点的特征向量。神经网络参数的学习通过最小化基于图的损失函数（包括训练集内有标签的和仍未有标签的）。如果有着相同的标签的特征向量距离近而不同标签的特征向量距离远的话，基于图的损失函数就小。GCN属于这一类。<br>另一类是先用无监督的学习方法学习节点的特征向量（这一过程也叫graph embedding），然后用特征向量和训练数据集训练一个标准的二分类分类器。然后用分类器预测没标签的节点。DeepWalk和LINE属于这一类。</p>
@@ -167,7 +167,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
     </div>
   </div>
 
@@ -177,7 +177,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 15px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 10px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
     </div>
   </div>
 

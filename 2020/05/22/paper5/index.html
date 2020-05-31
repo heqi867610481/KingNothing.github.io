@@ -15,7 +15,7 @@
 <meta property="og:description" content="BGM：Crimson Bow and Arrow – Epica 1 论文总体思路现存的输入不可知的对抗性扰动展示了一种有趣但现在无法解释的视觉模式。本篇论文引入了一种结构化的程序噪声函数来生成通用对抗扰动（UAP）的方法。这种方法在计算机图形化中广泛应用并且被设计为可参数化的。这种方式生成的噪声图样和现存的通用对抗扰动在视觉上有着相似性。此方法揭示了现在流行的DCN架构（比如Inception">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-05-22T02:37:58.000Z">
-<meta property="article:modified_time" content="2020-05-28T03:07:30.643Z">
+<meta property="article:modified_time" content="2020-05-31T11:15:17.850Z">
 <meta property="article:author" content="Meiyi Jiang">
 <meta property="article:tag" content="论文">
 <meta property="article:tag" content="对抗样本生成">
@@ -92,6 +92,7 @@
       
         <p>BGM：Crimson Bow and Arrow – Epica</p>
 <h1 id="1-论文总体思路"><a href="#1-论文总体思路" class="headerlink" title="1 论文总体思路"></a>1 论文总体思路</h1><p>现存的输入不可知的对抗性扰动展示了一种有趣但现在无法解释的视觉模式。本篇论文引入了一种结构化的程序噪声函数来生成通用对抗扰动（UAP）的方法。这种方法在计算机图形化中广泛应用并且被设计为可参数化的。这种方式生成的噪声图样和现存的通用对抗扰动在视觉上有着相似性。此方法揭示了现在流行的DCN架构（比如Inception v3和YOLO v3）的系统脆弱性。此外，过程中用了贝叶斯优化来有效地学习程序噪音参数来构建低代价无目标的黑盒攻击。进一步的，启发了输入不可知的防御来提高模型对对抗扰动的稳定性。攻击方法的普遍性暗示了DCN可能对低层级类别不可知的特征的聚合很敏感。<br>实验过程，首先在大规模ImageNet classifier上进行黑盒攻击，误分类率高达98.3%。攻击也迁移到了目标检测任务中，结果表示对YOLO v3目标检测器的检测物体有模糊效果。<br>论文创新点：1）第一个对模型不可知黑盒生成通用对抗扰动的方法。2）利用贝叶斯优化来有效加强黑盒攻击。他提高了5折随机参数选择的查询效率，并且效果要好于现在流行的L-BFGS优化算法。3）实验证据表明，程序噪音UAP似乎利用DCN的低层级特征，这一脆弱性可能会被利用创造跨应用的通用对抗性扰动。</p>
+<a id="more"></a>
 <h1 id="2-攻击模型"><a href="#2-攻击模型" class="headerlink" title="2 攻击模型"></a>2 攻击模型</h1><h2 id="2-1-攻击的普遍性（generalizability）"><a href="#2-1-攻击的普遍性（generalizability）" class="headerlink" title="2.1 攻击的普遍性（generalizability）"></a>2.1 攻击的普遍性（generalizability）</h2><p>generalizability衡量了两个方面的事情，一个是可移植性，另一个是universality。Input-specific类型的对抗扰动是针对给定的输入以及模型，是既不transferability，也不universality的。Transferable对抗扰动指，加到同一个输入上，能够使不同的模型误分类，一方面加大了攻击面，另一方面也为黑盒攻击找替代模型奠定基础。Universal的扰动指的是，对于一个数据集的大部分图片，添加上同一个扰动都可以造成误分类。Cross-model universal的扰动就是既transferability又universal。</p>
 <h2 id="2-2-攻击类型"><a href="#2-2-攻击类型" class="headerlink" title="2.2 攻击类型"></a>2.2 攻击类型</h2><p>前提是对于躲避攻击，认为攻击者可以对模型进行输入并得到输出。白盒攻击：对模型架构，训练集，参数的全知识。灰盒攻击：攻击者可以构造相似规模的替代模型，并且能够得到相似的数据集（此方法也可用于黑盒设置）。黑盒攻击：攻击者不知道目标模型也无法得到替代数据集，与目标模型唯一的互动是“query”它。由于黑盒攻击依赖于做大量query来获取信息，这就增加了被发现的几率。有一些黑盒攻击方案应用了零阶优化和梯度估计，但是query次数仍然过多。目前查询次数最少的一种方式用了匪帮优化框架，在ImageNet数据集的 每张图片平均约1000次查询。</p>
 <h1 id="3-程序噪声"><a href="#3-程序噪声" class="headerlink" title="3 程序噪声"></a>3 程序噪声</h1><p>程序噪声函数是用来生成图片模式的算法，通常用于创建自然细节以增强视频和图形制作中的图像。具有快速，可扩展，低内存占用等特点。<br>现存的通用对抗扰动（UAP），展现出的很有趣的一点是，他们的“通用性”，揭示了更广泛或者与类无关的特征，而机器学习算法又对此很敏感。论文做的假设就是程序噪声既然视觉上和那些UAP很相像，就也能起到UAP的作用。而且程序噪声生成的参数相对较少，可以负担得起黑盒攻击的query。程序噪声可分为3类：lattice gradient noise，sparse convolution noise和explicit noise。<br>lattice gradient noise通过在网格的整数点上随机插值或者梯度生成噪声，Perlin噪声是其代表。Sparse convolution noise随机定位并赋权重的核（指图片卷积用到的矩阵）的综合，Gabor noise是其代表。Explicit noise生成过程中，图片被提前生成并存储，这就需要较大的存储空间，因此在本论文的环境不适用。</p>
@@ -150,7 +151,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
     </div>
   </div>
 
@@ -160,7 +161,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 15px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 10px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
     </div>
   </div>
 
