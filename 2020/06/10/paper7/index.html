@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>[object Object] | </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="BGM：伎俩 – 二手玫瑰 1 论文总体概述论文做了一种对与一般的图像缩放算法的自动攻击，能够构造欺骗性图像，使图像在缩放算法处理前后视觉语意上发生很大的变化。因为对于很多现在流行的CNN图像检测模型（Caffe,TensorFlow和Torch），对输入图形进行缩放都是预处理过程中的重要步骤，所以这种攻击，在缩放后使图像视觉语义发生很大变化，能够对图片分类模型产生规避攻击或者数据毒化效果。实验方">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[object Object]">
+<meta property="og:url" content="https://heqi867610481.github.io/KingNothing.github.io/2020/06/10/paper7/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="BGM：伎俩 – 二手玫瑰 1 论文总体概述论文做了一种对与一般的图像缩放算法的自动攻击，能够构造欺骗性图像，使图像在缩放算法处理前后视觉语意上发生很大的变化。因为对于很多现在流行的CNN图像检测模型（Caffe,TensorFlow和Torch），对输入图形进行缩放都是预处理过程中的重要步骤，所以这种攻击，在缩放后使图像视觉语义发生很大变化，能够对图片分类模型产生规避攻击或者数据毒化效果。实验方">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/9.jpg">
+<meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/10.jpg">
+<meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/11.jpg">
+<meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/12.jpg">
+<meta property="article:published_time" content="2020-06-10T02:53:31.000Z">
+<meta property="article:modified_time" content="2020-06-13T12:25:38.819Z">
+<meta property="article:author" content="Meiyi Jiang">
+<meta property="article:tag" content="论文">
+<meta property="article:tag" content="对抗样本生成">
+<meta property="article:tag" content="图像缩放算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/9.jpg">
+  
+    <link rel="alternate" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="https://heqi867610481.github.io/KingNothing.github.io/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="https://heqi867610481.github.io/KingNothing.github.io/" id="logo"></a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="https://heqi867610481.github.io/KingNothing.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://heqi867610481.github.io/KingNothing.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-paper7" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/10/paper7/" class="article-date">
+  <time datetime="2020-06-10T02:53:31.000Z" itemprop="datePublished">2020-06-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      [object Object]
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>BGM：伎俩 – 二手玫瑰</p>
+<h1 id="1-论文总体概述"><a href="#1-论文总体概述" class="headerlink" title="1 论文总体概述"></a>1 论文总体概述</h1><p>论文做了一种对与一般的图像缩放算法的自动攻击，能够构造欺骗性图像，使图像在缩放算法处理前后视觉语意上发生很大的变化。因为对于很多现在流行的CNN图像检测模型（Caffe,TensorFlow和Torch），对输入图形进行缩放都是预处理过程中的重要步骤，所以这种攻击，在缩放后使图像视觉语义发生很大变化，能够对图片分类模型产生规避攻击或者数据毒化效果。实验方面，最后在基于云的图片服务上（Microsoft Azure,Aliyun,Baidu,Tencent）做了对效果的评估，能导致明显的误分类效果，即使图像处理（缩放算法和维度参数）的细节是不可知的。作为防护，论文也提出了一些潜在的对策。<br>攻击者实现攻击需要解决两个技术上的难题。一个是需要通过分析算法来决定在哪里插入像素点。另一个是，对于基于云的计算机视觉服务，确切的缩放算法和模型输入尺寸对于用户是不可知的，攻击者需要推断推断和缩放相关的参数。为了解决这些问题，首先缩放攻击的过程公式化为一个通用的优化问题。然后对于黑盒和白盒场景下的可行性都做了测试。对于白盒场景，针对的是Caffe,TensorFlow和Torch这三个通用的深度学习框架，结果发现几乎这些框架所使用的所有的默认图片缩放算法对于缩放攻击都很脆弱，攻击者可以对输入数据增加毒化或欺骗像素，而这些对于用户是可见的，但对于缩放算法则会被丢弃，从而被深度学习模型忽略。对于黑盒场景的攻击结果表明，即使处理过程的全部细节不可知，攻击仍然大部分有效。因为图片缩放模块是基于开源图像处理库或者开源的插值算法的，实现图像缩放的方式相对受限。攻击者可以暴力测试来推断缩放算法和目标规模。最后作者还发现并讨论了攻击延伸到一些计算机图像应用的影响范围。<br>论文主要贡献：1）揭示了图像缩放过程中的安全风险，对于常见的框架进行了验证。2）将缩放攻击公式化为一个受限优化问题，并展示了自动且有效的生成攻击图片的过程。3）证明了攻击对实施细节不可知的云服务依然有效。4）从预防和检测角度提出针对缩放攻击的防御策略。</p>
+<h1 id="2-相关背景知识"><a href="#2-相关背景知识" class="headerlink" title="2 相关背景知识"></a>2 相关背景知识</h1><h2 id="2-1-图像缩放算法"><a href="#2-1-图像缩放算法" class="headerlink" title="2.1 图像缩放算法"></a>2.1 图像缩放算法</h2><p>图像缩放算法被设计来改变图像尺寸的同时仍保留视觉特征。图像缩放通过插值法来推测目标点的像素值。不同的缩放算法决定了用哪几个相邻像素点的值以及他们的权重分配。比如对于输出图片的每一个像素，最近邻算法仅从输入中选取一个最近的像素值来代替，而双线性算法考虑一系列在目标像素点的周围的像素值，然后计算这些值的加权平均作为分配给目标像素点的值。这些缩放算法通常假设图片中的像素值是自然的而不是恶意的像素级别的操作过的。而本文的攻击就是攻击者精心调整像素级别的信息从而改变图片的语意。</p>
+<h2 id="2-2-深度学习的图片缩放预处理"><a href="#2-2-深度学习的图片缩放预处理" class="headerlink" title="2.2 深度学习的图片缩放预处理"></a>2.2 深度学习的图片缩放预处理</h2><p>对于图片分类模型，为了保证训练和分类的速度，图片通常都会被缩放到一个较小的尺寸（比如300*300）。即使一些模型的输入尺寸是固定的，比如特定大小的视频帧，经调查大多也是需要缩放这一过程的。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/9.jpg" alt="深度学习框架使用的缩放算法"><br>上图是论文中总结的常见的DL框架使用的缩放算法以及库。可以看出所使用的算法都是先水平缩放再垂直缩放。</p>
+<h2 id="2-3-图片信息隐写（的区别）"><a href="#2-3-图片信息隐写（的区别）" class="headerlink" title="2.3 图片信息隐写（的区别）"></a>2.3 图片信息隐写（的区别）</h2><p>对于图片隐写而言，主要目的是通过图片插值来实现可逆信息的隐藏，但这与本文提出的攻击不同。1）目的不同，图片隐写的目的是在原图片中隐藏信息，从而使秘密信息对人类不可见，而缩放攻击的目的是在在原图片中隐藏目标图片，从而引起视觉歧义。2）图片隐写自定义的编码方法来隐藏或恢复信息（比如LSB和NIP），而这编码方式通常是保密的。但是缩放攻击相反，基于的是公开的插值算法。</p>
+<h1 id="3-缩放攻击的公式化表示"><a href="#3-缩放攻击的公式化表示" class="headerlink" title="3 缩放攻击的公式化表示"></a>3 缩放攻击的公式化表示</h1><p><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/10.jpg" alt="缩放攻击流程"><br>从上图中可以看到描述攻击过程的四个概念，srcImg（Sm<em>n）、attackImg（Am</em>n）、outImg（Dm<code>*n</code>）、targetImg（Tm<code>*n</code>）。但有些情况下，outImg和targetImg有可能是同一个。<br>对于攻击，可以分为两种：强攻击模式和弱攻击模式。强攻击模式指的是srcImg和targetImg都被指定，这种攻击更具挑战。弱攻击模式指的是仅有targetImg被指定，某些极端情况下，图片内容也可能是无意义的，仅仅是为了导致一个错误的分类结果。没有指定srcImg，攻击者的目的仅仅是希望使ScaleFunc函数前后的图片差别尽量大。<br>对于强攻击模式，srcImg和targetImg都被指定，还看上图。这个时候攻击者的任务就是生成一个能导致欺骗效果的attackImg。但是符合条件的attackImg并非只有一个，这是因为ScaleFunc函数是满射的，也就是说生成同样的输出结果outImg，可以对应有不同的attackImg。在众多符合条件的attackImg中选择最优，可以选择和S最相似的A，同时限制D和T的差异在一个上限之内。下图是强攻击模式下的公式表达，其中衡量两个图片的距离，用的是L范式。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/11.jpg" alt="强攻击目标函数公式"><br>对于弱攻击模式，没有指定的S，流程图中就没有S的存在了。这个时候目标是找到一个A，使得A和T差异最大，同时，同样的限制D和T的差异在一个可接受的上界之内。因此弱攻击下的公式表达如下图所示。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/10/paper7/images/12.jpg" alt="弱攻击目标函数公式"><br>在上图的公式的第一行，所用的ScaleFunc是把T的图片尺寸缩放到和A的大小。</p>
+<h1 id="4-缩放攻击详细过程"><a href="#4-缩放攻击详细过程" class="headerlink" title="4 缩放攻击详细过程"></a>4 缩放攻击详细过程</h1><p>数学内容见论文第5章。</p>
+<h1 id="5-实验过程"><a href="#5-实验过程" class="headerlink" title="5 实验过程"></a>5 实验过程</h1><p>对于三种类型进行了实验：本地的图片分类应用（白盒）、计算机视觉云服务（黑盒）、web浏览器。</p>
+<h2 id="5-1-白盒"><a href="#5-1-白盒" class="headerlink" title="5.1 白盒"></a>5.1 白盒</h2><p>在这种情况下，假设攻击者知道模型要求的输入尺寸以及缩放算法。这可以通过逆向以及从已知信息推断等方法实现。实验针对Caffe,Tensorﬂow,和Torch三个流行的深度学习框架。对于每一个框架，本地实现了一遍BAIR/BVLC GoogleNet模型。此模型要求输入尺寸为224*224。实验的结果，大部分是成功的，但对于一部分不太常见的缩放算法，还没有生成有效的攻击，这是因为1）这些算法可能在缩放过程中设置了更多的限制，作者还没有学习到实施细节；2）在这篇论文中，仅仅对优化任务设置了一个严限制，在攻击效果和攻击图片生成难度上有个折衷。</p>
+<h2 id="5-2-黑盒"><a href="#5-2-黑盒" class="headerlink" title="5.2 黑盒"></a>5.2 黑盒</h2><p>这种情况下对输入尺寸和缩放算法是未知的，目的是使对输入图片的误分类。对于黑盒的攻击分两步：第一步是缩放参数的推断，第二步是根据推断的参数来构造攻击图片。<br>这里详说下第一步，略第二步和实验结果。两条经验性的观察有助于实现对缩放参数的推断。首先可以观察到对于大多数的CNN模型，输入都要求是正方形的图片，边长是201~300。其次可以观察到最常用的默认算法是Nearest, Bilinear, 以及Bicubic。范围确定后，用穷举法来确定确切的参数。核心思想就是构造一系列针对不同的参数的探针图片，然后哪个分类正确，哪个参数就是对的。但是为了提高效率，可以用一种包含了多个子图片的复杂攻击图片。首先选择n个属于不同分类的子探针图片。第二用一张全白图片作为背景，并将其分成n个不相交的探针区域。第三重复以下步骤：1）用第j张子探针图片放在空白图片的第j块探针区域。2）用一套缩放参数来对他缩放。3）把空白图片当作srcImg，把缩放过的图片当作targetImg。最后攻击者把所有输出结合起来构造探针图片，这样当探针图片被缩放，只有参数对上了的第j个区域的图片会被还原。</p>
+<h2 id="5-3-web浏览器"><a href="#5-3-web浏览器" class="headerlink" title="5.3 web浏览器"></a>5.3 web浏览器</h2><p>因为网页有时候也对图片内容提供缩放功能，攻击者可能利用这一点来进行欺骗攻击或者钓鱼。</p>
+<h2 id="5-4-可能干扰缩放攻击的因素"><a href="#5-4-可能干扰缩放攻击的因素" class="headerlink" title="5.4 可能干扰缩放攻击的因素"></a>5.4 可能干扰缩放攻击的因素</h2><p>图片预处理过程除了缩放可能还包括其他步骤，比如剪裁、过滤等。如果这些步骤出现在缩放前，就有可能对缩放攻击造成干扰。这里详细讨论一下。<br>剪裁：对于输入的图片，为了数据增强或者移除背景的目的，截断特定的区域。剪裁操作通常改变图片的纵横比，而且如果缩放攻击针对的是错误的维度的话，图片也不能恢复到正确的targetImg。只有在一些特别的情况下才能经过剪裁仍然有效，那就是剪裁仍然保留了纵横比，并且应用的算法是Nearest。当然受影响的程度也和被剪裁掉的相对面积有关。<br>过滤：指的是模糊或者锐化，调整颜色调色板。这类操作改变了像素值，因此直接影响了缩放攻击。因为攻击是基于对插值法涉及到的相邻像素点的平均值的操作。对于简单的缩放算法，比如Nearest，经过这一步骤可能还能保留攻击效果。<br>精细变换：对输入图片的旋转或者镜像。对图片旋转任意角度很大程度上破坏了攻击者的精心构造。但是，根据输入尺寸和选择算法的不同，旋转180°，对图片镜像可能对缩放攻击无影响。一些缩放算法与方向无关，也就是缩放后的输出和输入时是从左向右输入像素值还是什么方向无关。在这种情况下，不会影响攻击。<br>尽管以上操作会对攻击有影响，但如果攻击者知道有什么操作，并且知道确切的参数，那就不构成问题了。这种情况下，这些操作都可以用矩阵表示，如果存在逆矩阵，攻击者就可以在把攻击图片输入之前，先应用一下逆矩阵。<br>除了以上操作外，还有一些图片自己的因素能影响攻击的效果，尤其是尺寸和明度。攻击者需要找到合适的source和target图片才能保证攻击效果。<br>尺寸：source和target图片的尺寸决定了有多少冗余像素能够被用来实施攻击。如果缩放前后的尺寸差异很小的话，就不足以产生成功的攻击效果。<br>明度：source和target图片的明度决定了限制的宽严。考虑最糟糕的情况，全白的source和全黑的target很难构造一个能够有欺骗效果的攻击图片。</p>
+<h1 id="6-防御与检测手段"><a href="#6-防御与检测手段" class="headerlink" title="6 防御与检测手段"></a>6 防御与检测手段</h1><p>防御手段：最简单粗暴的方式就是删除和深度学习模型要求的尺寸不同的图片，但是这只有少数场合能用。（话说都这样了缩放步骤意义何在。）然后另一个解决办法是在缩放前成行成列的随机移除一些像素。<br>检测手段：因为缩放攻击是要在缩放前后造成视觉特征的巨大变化。一个可能的检测方案就是在缩放过程中检测特征的巨大变化，比如颜色直方分布以及颜色散射分布。<br>1）颜色直方分布。计算前后不同像素值的点的个数，形成两个256维的向量，然后计算他们的余弦距离。（计算时转换成灰度图）<br>2）颜色散射分布。衡量了颜色的分布特征。首先，对于拥有同样的像素值的所有像素点，计算他们到图片中心的平均距离，同样形成两个256维的向量，然后计算他们的余弦相似度。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/06/10/paper7/" data-id="ckbgdday40001focpcw015zt6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" rel="tag">图像缩放算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          paper8
+        
+      </div>
+    </a>
+  
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" rel="tag">图像缩放算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" style="font-size: 10px;">图像缩放算法</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/">paper8</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/10/paper7/">[object Object]</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/22/paper5/">论文笔记：5   Procedural Noise Adversarial Examples for Black-Box Attacks on Deep Convolutional Networks</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/17/paper4/">论文笔记：4   Attacking Graph-based Classification via Manipulating the Graph Structure</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Meiyi Jiang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="https://heqi867610481.github.io/KingNothing.github.io/fancybox/jquery.fancybox.css">
+
+  
+<script src="https://heqi867610481.github.io/KingNothing.github.io/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="https://heqi867610481.github.io/KingNothing.github.io/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
