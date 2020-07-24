@@ -20,7 +20,7 @@
 <meta property="og:image" content="https://img-blog.csdnimg.cn/20200514112320278.png">
 <meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/14/paper1/images/2.png">
 <meta property="article:published_time" content="2020-05-14T06:37:01.000Z">
-<meta property="article:modified_time" content="2020-05-31T11:13:57.670Z">
+<meta property="article:modified_time" content="2020-06-18T11:23:11.094Z">
 <meta property="article:author" content="Meiyi Jiang">
 <meta property="article:tag" content="论文">
 <meta property="article:tag" content="对抗样本生成">
@@ -103,7 +103,8 @@
 <h1 id="2-一些背景知识"><a href="#2-一些背景知识" class="headerlink" title="2 一些背景知识"></a>2 一些背景知识</h1><h2 id="2-1-损失函数"><a href="#2-1-损失函数" class="headerlink" title="2.1 损失函数"></a>2.1 损失函数</h2><p>关于损失函数，普通的分类一般用 cross-entropy loss，交叉熵损失；训练人脸识别这种模型常用contrastive loss和triplet loss，最近比较新的也有center loss，是把样本归结到最近的质心那一类，还有比如angular-softmax loss，在一个球形内强制实行判别限制？</p>
 <h2 id="2-2-攻击算法"><a href="#2-2-攻击算法" class="headerlink" title="2.2 攻击算法"></a>2.2 攻击算法</h2><p>paper中有这么一句：PGD在半径为（艾普斯龙）的球空间内搜寻对抗样本，CW在k（kai）的范围内找到一个最低扰动的对抗样本的最短距离。<br>附一个用pytorch实现的各种攻击算法，备用。<br><a href="https://github.com/Harry24k/adversarial-attacks-pytorch" target="_blank" rel="noopener">https://github.com/Harry24k/adversarial-attacks-pytorch</a></p>
 <h3 id="2-2-1-CW"><a href="#2-2-1-CW" class="headerlink" title="2.2.1 CW"></a>2.2.1 CW</h3><p>关于生成对抗样本，确定扰动德尔塔的问题一般表示为一个有限制的优化问题。具体表示如下图。然后算法paper用的就是CW和PGD了。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/05/14/paper1/images/1.png" alt="生成对抗样本的问题"><br>先码一下CW原论文地址：<a href="https://arxiv.org/pdf/1608.04644.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1608.04644.pdf</a><br>此处参考了博客 <a href="https://www.cnblogs.com/tangweijqxx/p/10627360.html" target="_blank" rel="noopener">https://www.cnblogs.com/tangweijqxx/p/10627360.html</a><br>和<a href="http://shaobaobaoer.cn/archives/749/carliniattack" target="_blank" rel="noopener">http://shaobaobaoer.cn/archives/749/carliniattack</a><br>CW是一种很强攻击能力的白盒攻击算法，是一种基于优化的对抗样本生成算法。（基于梯度的攻击算法有deepfool，FGSM）<br>核心思想如下：将对抗样本作为变量。攻击考虑两方面。一是对抗样本和原样本差距尽量小；另一个是对抗样本使得模型分类错误，而且模型分错的那类的概率还得尽量高。总体而言，优化函数可定义如下：<br><img src="https://img-blog.csdnimg.cn/20200514114354350.png" alt="优化函数定义"><br>然后具体的目标函数选择有很多，如下。其中f6表现最好。这个表现由两个因素衡量，一个是扰动的平均大小，一个是攻击成功率。<br><img src="https://img-blog.csdnimg.cn/20200514115049342.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0p1Z2dsZV9Bem90aA==,size_16,color_FFFFFF,t_70" alt="目标函数选择"><br>下图是CW攻击里比较常见的一种。w是对抗样本，t是攻击标签，公式中r_n就衡量了对抗样本和原始样本的差距。tanh函数此处的作用是将函数值扩展到负无穷到正无穷。<br>目标函数的定义类似于f6。公式中Z(x)表示样本x输入到模型还没经过softmax那一步时的输出向量，Z(x)右下角的脚标i或者t表示这个向量对应i类别或者t类别的那一个输出值。k代表置信度，k越大模型分错且错成那一类的概率越大，但对抗样本也更难找了。一般取40最佳。<img src="https://img-blog.csdnimg.cn/20200514112320278.png" alt="CW攻击算法核心公式"><br>实际编程实现的话，据说IBM的ART工具很强。</p>
-<h3 id="2-2-2-PGD"><a href="#2-2-2-PGD" class="headerlink" title="2.2.2 PGD"></a>2.2.2 PGD</h3><h2 id="2-3-LIPSCHITZ连续性"><a href="#2-3-LIPSCHITZ连续性" class="headerlink" title="2.3 LIPSCHITZ连续性"></a>2.3 LIPSCHITZ连续性</h2><p>数学上的定义指的是一段区间内的斜率上限。paper中提到希望找一个子区间，在这个子区间内，这个斜率上限很高。这样的话图片的一个小变化就能使得embedding的扰动很大。paper做了一些实验来证明对抗样本附近区间具有强LIPSCHITZ连续性。实验包含很多对比内容，包括center和triplet两种人脸识别的方式，还用了不同的分类器，还分别用了CW和PGD两种攻击算法。paper想证明的是这样的话乘一个小因子就对扰动后的图片的embedding影响很大，所以小因子很有用。</p>
+<h3 id="2-2-2-PGD"><a href="#2-2-2-PGD" class="headerlink" title="2.2.2 PGD"></a>2.2.2 PGD</h3><p>PGD原论文地址<a href="https://arxiv.org/pdf/1706.06083.pdf" target="_blank" rel="noopener">https://arxiv.org/pdf/1706.06083.pdf</a><br>参考博客<a href="https://www.cnblogs.com/tangweijqxx/p/10617752.html" target="_blank" rel="noopener">https://www.cnblogs.com/tangweijqxx/p/10617752.html</a><br><a href="https://www.jianshu.com/p/d44dfc32f4c0" target="_blank" rel="noopener">https://www.jianshu.com/p/d44dfc32f4c0</a><br>PGD基于FGSM。FGSM是一种白箱攻击方法，该方法认为攻击就是添加扰动使得模型的loss增大，所以沿着梯度方向生成攻击样本应该是最佳的（注意：传统情况下我们是固定样本，通过梯度改变权值，现在就是固定权值，通过梯度改变样本。）FGSM是一种一次攻击，即针对一张图加梯度也仅仅增一次梯度。但如果现在攻击的是一个复杂非线性模型的话，这样的方法可能就不能一定攻击成功。可以想象，复杂的非线性模型可能在极小的范围内剧烈变化，所以梯度跨度大可能就不能攻击成功，所以PGD考虑把FGSM的一大步换成多小步，每次走一小步，每次迭代都会将扰动clip到规定范围内。</p>
+<h2 id="2-3-LIPSCHITZ连续性"><a href="#2-3-LIPSCHITZ连续性" class="headerlink" title="2.3 LIPSCHITZ连续性"></a>2.3 LIPSCHITZ连续性</h2><p>数学上的定义指的是一段区间内的斜率上限。paper中提到希望找一个子区间，在这个子区间内，这个斜率上限很高。这样的话图片的一个小变化就能使得embedding的扰动很大。paper做了一些实验来证明对抗样本附近区间具有强LIPSCHITZ连续性。实验包含很多对比内容，包括center和triplet两种人脸识别的方式，还用了不同的分类器，还分别用了CW和PGD两种攻击算法。paper想证明的是这样的话乘一个小因子就对扰动后的图片的embedding影响很大，所以小因子很有用。</p>
 <h2 id="2-4-提到的数据集"><a href="#2-4-提到的数据集" class="headerlink" title="2.4 提到的数据集"></a>2.4 提到的数据集</h2><p>MNIST<a href="http://yann.lecun.com/exdb/mnist/" target="_blank" rel="noopener">http://yann.lecun.com/exdb/mnist/</a>。MNIST 数据集来自美国国家标准与技术研究所, National Institute of Standards and Technology (NIST). 训练集 (training set) 由来自 250 个不同人手写的数字构成, 其中 50% 是高中学生, 50% 来自人口普查局 (the Census Bureau) 的工作人员. 测试集(test set) 也是同样比例的手写数字数据。可以不用下载，在keras.datasets包中直接调用。</p>
 <pre><code class="bash">from keras.datasets import mnist</code></pre>
 <p>CIFAR-10是一个包含60000张图片的数据集。其中每张照片为32*32的彩色照片，每个像素点包括RGB三个数值，数值范围 0 ~ 255。所有照片分属10个不同的类别，分别是 ‘airplane’, ‘automobile’, ‘bird’, ‘cat’, ‘deer’, ‘dog’, ‘frog’, ‘horse’, ‘ship’, ‘truck’<br>其中，5万张作为训练集，1万张作为测试机。训练集被分为了5批训练和1批测试。每一批都是1万张。测试集是从每一种分类中随机抽取出来1000张组成。训练集从10个分类中各自随机抽取5000张，一共5万张。下载：<a href="http://www.cs.toronto.edu/~kriz/cifar.html" target="_blank" rel="noopener">http://www.cs.toronto.edu/~kriz/cifar.html</a></p>
@@ -161,7 +162,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" rel="tag">图像缩放算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%90%8E%E9%97%A8%E6%94%BB%E5%87%BB/" rel="tag">后门攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" rel="tag">图像缩放算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
     </div>
   </div>
 
@@ -171,7 +172,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" style="font-size: 10px;">图像缩放算法</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%90%8E%E9%97%A8%E6%94%BB%E5%87%BB/" style="font-size: 10px;">后门攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" style="font-size: 10px;">图像缩放算法</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 13.33px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
     </div>
   </div>
 
@@ -193,7 +194,15 @@
       <ul>
         
           <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/">paper8</a>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/28/paper10/">论文笔记：10   Latent Backdoor Attacks on Deep Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/25/paper9/">论文笔记：9   Neural Network Inversion in Adversarial Setting via Background Knowledge Alignment</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/">论文笔记：8   CloudLeak：Large-Scale Deep Learning Models Stealing Through Adversarial Examples</a>
           </li>
         
           <li>
@@ -202,14 +211,6 @@
         
           <li>
             <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</a>
-          </li>
-        
-          <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/22/paper5/">论文笔记：5   Procedural Noise Adversarial Examples for Black-Box Attacks on Deep Convolutional Networks</a>
-          </li>
-        
-          <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/17/paper4/">论文笔记：4   Attacking Graph-based Classification via Manipulating the Graph Structure</a>
           </li>
         
       </ul>

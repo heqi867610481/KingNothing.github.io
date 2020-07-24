@@ -5,16 +5,20 @@
   
 
   
-  <title>paper8 | </title>
+  <title>论文笔记：8   CloudLeak：Large-Scale Deep Learning Models Stealing Through Adversarial Examples | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="article">
-<meta property="og:title" content="paper8">
+  <meta name="description" content="BGM：Tatoue-moi 1 论文概述本文提出了一种针对DNN的有效的黑盒攻击方式。对于基于云的MLaaS可以以近乎完美的效果训练出替代模型。和现有的方法比较，查询次数明显少。攻击整合了多种主动学习、迁移学习、对抗攻击等。实验过程在Microsoft，Face++，IBM，Google和Clarifai等商业平台上进行了验证。对于商用的模型，已经有一些攻击方式可以进行模型提取以及数据窥探。比如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文笔记：8   CloudLeak：Large-Scale Deep Learning Models Stealing Through Adversarial Examples">
 <meta property="og:url" content="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/index.html">
 <meta property="og:site_name">
+<meta property="og:description" content="BGM：Tatoue-moi 1 论文概述本文提出了一种针对DNN的有效的黑盒攻击方式。对于基于云的MLaaS可以以近乎完美的效果训练出替代模型。和现有的方法比较，查询次数明显少。攻击整合了多种主动学习、迁移学习、对抗攻击等。实验过程在Microsoft，Face++，IBM，Google和Clarifai等商业平台上进行了验证。对于商用的模型，已经有一些攻击方式可以进行模型提取以及数据窥探。比如">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-06-15T10:39:54.000Z">
-<meta property="article:modified_time" content="2020-06-15T10:39:54.209Z">
+<meta property="article:modified_time" content="2020-06-18T10:52:56.347Z">
 <meta property="article:author" content="Meiyi Jiang">
+<meta property="article:tag" content="论文">
+<meta property="article:tag" content="对抗攻击">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="" type="application/atom+xml">
@@ -78,7 +82,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      paper8
+      论文笔记：8   CloudLeak：Large-Scale Deep Learning Models Stealing Through Adversarial Examples
     </h1>
   
 
@@ -86,18 +90,40 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>BGM：Tatoue-moi</p>
+<h1 id="1-论文概述"><a href="#1-论文概述" class="headerlink" title="1 论文概述"></a>1 论文概述</h1><p>本文提出了一种针对DNN的有效的黑盒攻击方式。对于基于云的MLaaS可以以近乎完美的效果训练出替代模型。和现有的方法比较，查询次数明显少。攻击整合了多种主动学习、迁移学习、对抗攻击等。实验过程在Microsoft，Face++，IBM，Google和Clarifai等商业平台上进行了验证。<br>对于商用的模型，已经有一些攻击方式可以进行模型提取以及数据窥探。比如，F.Tramer et al.第一个提出了一种模型提取攻击，通过查询和获得预测结果，可以本地训练一个近乎等同的机器学习模型。R.Shokri et al.提出了一种成员推断攻击，来确定训练集中是否有特定的数据记录。别人进一步的研究成果表明，成员暴露广泛存在，不仅存在于过拟合的模型。针对此类攻击的防御机制也有被提出，但不能同时保证效果和效率。<br>尽管DNN查询和模型提取攻击有重大进展，但是实现现实生活中的攻击仍然是不现实的，这是因为1）当前的模型提取攻击主要针对小型ML模型，比如逻辑回归、支持向量机和小型神经网络。但对于更复杂的DNN模型，结果有效性不明。2）当前的模型提取攻击需要的查询次数正比于目标模型的参数个数，对于流行的DNN模型比如VGGNet，ResNet和Inception等有着上百万参数的模型而言就很不实际。所以现存的方法表现比较好的话，就要求大量的查询次数。<br>本文提出的方案的核心思想是向受害模型输入恶意样本，获得输出结果，用这输入-输出对来重新训练本地的替代模型（替代模型从 candidate Model Zoo中选择）。通过应用一种基于边的，对抗性的，主动学习的算法，来搜寻恶意样本，这样可以提高查询的效率。这种方法搜寻到的图片几乎分布在受害模型的分类边界线上，这样攻击者也可以降低构造合成数据集时候的label工作。<br>本文的贡献总结如下：1）针对本地替代模型，提出一种名为Feature Fool的对抗攻击方法，采用内部表示来生成恶意样本的子集（比如合成数据集）。这些恶意样本被用来查询受害者模型的决策层边界线间的距离。2）设计了一种针对大规模DNN的黑盒模型窃取攻击方式。攻击通过在训练好的模型的基础上应用对抗性主动学习和迁移学习，有效的加速了模型窃取进程。3）在一组商业平台上进行了评估，效果和效率可以同时保证。</p>
+<h1 id="2-背景知识"><a href="#2-背景知识" class="headerlink" title="2 背景知识"></a>2 背景知识</h1><h2 id="2-1-迁移学习"><a href="#2-1-迁移学习" class="headerlink" title="2.1 迁移学习"></a>2.1 迁移学习</h2><p>关于迁移学习的原理此处就不赘述了。但是论文提到了Sun et al.做的工作和本文有点像。Sun设计了DeepID来学习一系列的高级特征表示，并做了基于DeepID的联合贝叶斯模型从源域到目标域的转换。与Sun的工作不同的是，本文在一个训练子集上对VGG19模型做了微调，然后使用DeepID来进一步提取高级特征表示。这个模型在文中被称为VGG_DeepID。<br>关于DeepID的内容，这里引用一下链接里的原文。<br><a href="https://zhuanlan.zhihu.com/p/82448662" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/82448662</a><br>“此文发表于2014年CVPR上，以人脸识别的子领域人脸验证(Face Verification)为目标，文章并没有用直接用二类分类CNN实现人脸验证，而是通过学习一个多类（10000类，每个类大约有20个实例）人脸识别任务来学习特征，并把学到的特征使用到face verification和其他unseen新的identification。它使用人脸上不同的patch训练多个单独的ConvNet，每个ConvNet的最后一个隐层为提取到的特征，称之为DeepID(Deep hidden IDentitiy feature)。最后将这些patch提取到的DeepID concate起来作为整个Face的feature送入Joint Bayesian分类器（当然也可以是其他的分类器）做二分类就可以做人脸验证了。文章主要的贡献在于用很多不同的Face patch分别训练以一个很难的分类任务（~10000个不同身份的人）的ConvNet，得到一些分辨力很强的over-complete representations，最后在不需要严格对齐的前提下于LFW上取得了97.45%的人脸对比精度。”<br>本文应用了迁移学习。在源任务方面，用了AlexNet，VGG19，VGGFace和ResNet50作为基础架构。其中，对于VGG19，移除了其中的全连接层FC6，添加了一个DeepID层，DeepID层结合了之前最大池化层和卷积层的特征。这个DeepID层在VGG19模型的最后部分，接着是两个全连接层FC7和FC8。前面卷积层的权重和偏差是在ImageNet上训练的，被源任务和目标任务所共享，而DeepID层和两个全连接层会在合成数据集上微调。</p>
+<h2 id="2-2-对抗样本"><a href="#2-2-对抗样本" class="headerlink" title="2.2 对抗样本"></a>2.2 对抗样本</h2><p>关于对抗样本，一些认为替代模型有着和受害模型相似的边界，并且为替代模型生成的对抗样本也能够很好的迁移到其他label。也有一些研究通过操纵DNN的内部特征来获得更好的攻击表现。本文也采取了使用DNN的内部特征的相似方法，来生成对抗样本。和现有的特征级别的对抗攻击不同，本文主要集中于以下两方面。1）生成的恶意特征的使用。现有的特征级攻击方法仅使用引导图像的特征表示来生成对抗性示例，而不生成使用显著性映射计算的恶意特征表示。2）求解模型参数以最小化目标类的置信度得分。</p>
+<h2 id="2-3-主动学习"><a href="#2-3-主动学习" class="headerlink" title="2.3 主动学习"></a>2.3 主动学习</h2><p>主动学习是迭代性的选择信息样本来教给人们label，同时最大化重新训练DNN的表现。但是之前的不确定抽样方法有着一个问题，那就是被选择的几乎在分类的边界线上的样本过于相似，从而导致分类结果很差，但是人们又把这些样本看作理想的训练集。在本文中，通过一系列对抗样本生成算法，来提高分布在边界线上的有效样本的多样性，从而解决这个问题。<br><a href="https://baijiahao.baidu.com/s?id=1641909326857282702&wfr=spider&for=pc" target="_blank" rel="noopener">https://baijiahao.baidu.com/s?id=1641909326857282702&amp;wfr=spider&amp;for=pc</a></p>
+<h1 id="3-攻击算法"><a href="#3-攻击算法" class="headerlink" title="3 攻击算法"></a>3 攻击算法</h1><h2 id="3-1-对抗性主动学习过程"><a href="#3-1-对抗性主动学习过程" class="headerlink" title="3.1 对抗性主动学习过程"></a>3.1 对抗性主动学习过程</h2><p>提出了一种基于边界的对抗性主动学习算法。给定一个无标签数据集（主动学习池），从中筛选出有效样本构成的子集，所谓有效，指的是对于决定受害分类器的分类边界有效或信息量大。由于多分类器可以被看作是一系列的二分类器，可以先用二分类来理解算法。攻击者生成的合成数据集的样本主要包含两类：有着最低置信的合法样本，和有着最低置信的攻击样本。与高置信的样本相比较，这些样本更容易提供关于超平面的信息。对于多分类问题，由于分界的超平面几何复杂性很高，提出FeatureFool方法来寻找使目标模型有着低置信的样本。</p>
+<h2 id="3-2-对抗样本生成过程"><a href="#3-2-对抗样本生成过程" class="headerlink" title="3.2 对抗样本生成过程"></a>3.2 对抗样本生成过程</h2><p>首先讲一下本文提出的FF方法。<br>FF：FeatureFool方法基于的是L-BFGS方法。L-BFGS是在对抗样本的分类结果为目标类l的限制下，最小化扰动后样本和原样本间的损失函数。FeatureFool做了改进，利用了图片的内部特征。于是目标函数除了最小化原来那一项，还加了一个三联损失。三联损失是对抗样本分别和目标样本以及原样本的中间层特征距离差，最小化这一项意味着要求对抗样本和目标尽量相似，和源样本尽量远离。<br>其他用来做对比实验的方法如下：<br>RS：Random Sample，就是随机从原来的域中抽样，向受害模型查询，不生成对抗样本。<br>PGD：具体内容参见paper1，不详细说。<br>CW：关于CW的详细内容，可以翻看一下paper1里面。需要注意的是CW通过一个参数k来调整希望对抗样本的分类错的置信水平。所以就可以调整这个参数，来达到使对抗样本尽量落于边界的目的。<br>FA：Feature Adversary，是由Sabour et al. 提出的攻击方式，原理是最小化“图片对”的在受害模型中的内部特征向量的的Lp距离。</p>
+<h2 id="3-3-DNN训练过程"><a href="#3-3-DNN训练过程" class="headerlink" title="3.3 DNN训练过程"></a>3.3 DNN训练过程</h2><p>对于以上5中数据集生成方法而言，RS是随机选择加入到训练集，并没有生成对抗样本，以下叙述不包含这种情况。对于其他4种方法来说。数据集的生成方法描述如下：<br>首先随机从目标域中选择一个小子集，作为最初始的数据集。用对抗样本生成算法对最初的替代模型作出攻击，由此得到一些恶意样本。然后把恶意样本送到受害模型中去，得到他的输出。将其加入到数据集中，完成一次对迭代生成合成数据集的过程。然后用合成的数据集微调本地的替代模型（迁移学习）。在这个过程中，替代模型和受害模型的分类边界逐渐相似。<br>这里再给出一个直观上的解释：如果替代模型和受害模型是二分类的线性分类器，在p维空间，那么，那么边界就是p维空间的超平面。那么如果我们数据集中有超过p个点位于边界上，那么就可以完完整整的恢复边界。另一方面，如果数据集里的点都是随即选的，那就需要更多的点来恢复边界。</p>
+<h1 id="4-实验设置"><a href="#4-实验设置" class="headerlink" title="4 实验设置"></a>4 实验设置</h1><p>实验部分，作者训练了Microsoft Cloud Vision Service，IBM Watson Visual Recognition，Google AutoML Vision，他们分别针对的是交通标志识别，花朵识别，人脸识别。这模仿了用户上传私人数据集来训练云模型的过程。此外还有Face++ Emotion Recognition API和Clarifai Safe for Work (NSFW) API。这两个是直接当作黑盒攻击的，没有自己用数据集训练的过程。实验从两方面进行，一个是模型窃取攻击对不同数据集和迁移架构的攻击效果；另一个是展示了本文提出的攻击手法和已有的F.Tramer、Correia-Silva、Papernot等攻击的比较。<br>本地预训练模型有AlexNet、VGG19、VGGFace、ResNet50。预训练模型训练过程中首先从较大的学习率开始，然后逐渐减小。使用随机梯度下降法来最小化交叉熵损失，还用了剪裁、旋转和缩放等数据增强方法。<br>以下是一些比较重要的实验结论：1）对抗样本的扰动提高了合成数据集的多样性，使得迁移效果更好。但是这个优点随着查询次数的增多就不那么突出了。2）与RS、PGD、FA相比较，基于CW、FF训练的替代模型效果更好，这是因为这两种方法 都通过参数可以控制误分类的置信度。3）通过分析使用不同预训练模型作为替代模型的表现，可以观察到替代模型的表现可以被模型复杂性和任务相关度所影响，更复杂，数据集更相关的往往效果更好。<br>和已知攻击的对比，本文提出的方法是最好的，可以兼顾高准确率和更少的查询次数。Tramer的攻击效果不好可能是使用了线性搜寻来找样本，然而这导致找的样本有些过于相似。</p>
+<h1 id="5-其他"><a href="#5-其他" class="headerlink" title="5 其他"></a>5 其他</h1><h2 id="5-1-防御"><a href="#5-1-防御" class="headerlink" title="5.1 防御"></a>5.1 防御</h2><p>首先应用了PRADA防御方法。这种防御的原理是分析对受害模型的查询的分布，根据它们之间的联系来检测模型提取攻击。但这种防御对于精心构造并没有使分类置信度大幅下降的样本的本文攻击而言不太有效，从而使得防御的误报率很高。<br>论文提出的潜在的防御机制不在于分析连续查询的分布，而在于检测对抗样本。基于对抗样本和正常样本的特征来进行检测。使用深度学习框架PyTorch训练了一个特征分布引导网络，起名叫DefenseNet。预训练好的DefenseNet被用来提取出每个隐藏层的输出作为输入样本的特征。利用分类混合模型作为先验概率来刻画这些查询样本的分布。攻击者生成的对抗性实例具有不同于良性样本分布的特征分布。作者还将支持向量机分类集成到DefenseNet中，以区分良性样本和对抗性样本，而不是可能改变决策边界的先前工作。</p>
+<h2 id="5-2-局限与未来改进方向"><a href="#5-2-局限与未来改进方向" class="headerlink" title="5.2 局限与未来改进方向"></a>5.2 局限与未来改进方向</h2><p>1）首先一个主要的局限性是为了最大化远离觉决策边界线的样本的不确定性，攻击者会添加更多的扰动。但这样的话，有着很大扰动的对抗样本会慢慢的污染合成数据集，从而持续降低替代模型的准确性。未来可以设计更复杂的算法来在二者之间做个平衡。<br>2）未来可以把该方法拓展到多标签情境下。也就是说，为了对受害者模型发起模型窃取攻击，攻击者需要首先制作带有多目标标签的对抗样本，然后生成合成数据集来训练替代模型。虽然所提出的攻击框架没有在多标签分类模型上进行评估，但是本文所介绍的对抗式查询方法可以帮助对手获得关于受害者模型的更重要的信息，如决策边界、标签类型等。<br>3）未来还可以拓展到其他领域，比如语音和文本。</p>
+
       
     </div>
     <footer class="article-footer">
       <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/" data-id="ckbgddaxe0000focp083cd4q7" class="article-share-link">Share</a>
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+
     </footer>
   </div>
   
     
 <nav id="article-nav">
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/25/paper9/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          论文笔记：9   Neural Network Inversion in Adversarial Setting via Background Knowledge Alignment
+        
+      </div>
+    </a>
   
   
     <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/10/paper7/" id="article-nav-older" class="article-nav-link-wrap">
@@ -121,7 +147,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" rel="tag">图像缩放算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%90%8E%E9%97%A8%E6%94%BB%E5%87%BB/" rel="tag">后门攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" rel="tag">图像缩放算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
     </div>
   </div>
 
@@ -131,7 +157,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" style="font-size: 10px;">图像缩放算法</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 10px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%90%8E%E9%97%A8%E6%94%BB%E5%87%BB/" style="font-size: 10px;">后门攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" style="font-size: 10px;">图像缩放算法</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 13.33px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
     </div>
   </div>
 
@@ -153,7 +179,15 @@
       <ul>
         
           <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/">paper8</a>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/28/paper10/">论文笔记：10   Latent Backdoor Attacks on Deep Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/25/paper9/">论文笔记：9   Neural Network Inversion in Adversarial Setting via Background Knowledge Alignment</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/">论文笔记：8   CloudLeak：Large-Scale Deep Learning Models Stealing Through Adversarial Examples</a>
           </li>
         
           <li>
@@ -162,14 +196,6 @@
         
           <li>
             <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</a>
-          </li>
-        
-          <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/22/paper5/">论文笔记：5   Procedural Noise Adversarial Examples for Black-Box Attacks on Deep Convolutional Networks</a>
-          </li>
-        
-          <li>
-            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/17/paper4/">论文笔记：4   Attacking Graph-based Classification via Manipulating the Graph Structure</a>
           </li>
         
       </ul>

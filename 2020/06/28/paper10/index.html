@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>论文笔记：10   Latent Backdoor Attacks on Deep Neural Networks | </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1 论文总体思路对于神经网络的后门攻击也是一个攻击的类别，指的是在正常的模型中隐藏着误分类的规则，仅仅在特定的输入时被触发。在本文中提出了latent backdoors，一种基于迁移学习的后门攻击。后门嵌入在Teacher模型中，当通过迁移学习迁移到Student模型中时被激活。目的是使得任意有着设计好的patten的图片都被分类为target类别（如果student模型中恰好就包含了targe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="论文笔记：10   Latent Backdoor Attacks on Deep Neural Networks">
+<meta property="og:url" content="https://heqi867610481.github.io/KingNothing.github.io/2020/06/28/paper10/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="1 论文总体思路对于神经网络的后门攻击也是一个攻击的类别，指的是在正常的模型中隐藏着误分类的规则，仅仅在特定的输入时被触发。在本文中提出了latent backdoors，一种基于迁移学习的后门攻击。后门嵌入在Teacher模型中，当通过迁移学习迁移到Student模型中时被激活。目的是使得任意有着设计好的patten的图片都被分类为target类别（如果student模型中恰好就包含了targe">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/28/paper10/images/16.jpg">
+<meta property="og:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/28/paper10/images/17.jpg">
+<meta property="article:published_time" content="2020-06-28T12:11:22.000Z">
+<meta property="article:modified_time" content="2020-06-29T14:07:36.217Z">
+<meta property="article:author" content="Meiyi Jiang">
+<meta property="article:tag" content="论文">
+<meta property="article:tag" content="神经网络">
+<meta property="article:tag" content="后门攻击">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/28/paper10/images/16.jpg">
+  
+    <link rel="alternate" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="https://heqi867610481.github.io/KingNothing.github.io/css/style.css">
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="https://heqi867610481.github.io/KingNothing.github.io/" id="logo"></a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="https://heqi867610481.github.io/KingNothing.github.io/">Home</a>
+        
+          <a class="main-nav-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="https://heqi867610481.github.io/KingNothing.github.io/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://heqi867610481.github.io/KingNothing.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-paper10" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/28/paper10/" class="article-date">
+  <time datetime="2020-06-28T12:11:22.000Z" itemprop="datePublished">2020-06-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      论文笔记：10   Latent Backdoor Attacks on Deep Neural Networks
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-论文总体思路"><a href="#1-论文总体思路" class="headerlink" title="1 论文总体思路"></a>1 论文总体思路</h1><p>对于神经网络的后门攻击也是一个攻击的类别，指的是在正常的模型中隐藏着误分类的规则，仅仅在特定的输入时被触发。在本文中提出了latent backdoors，一种基于迁移学习的后门攻击。后门嵌入在Teacher模型中，当通过迁移学习迁移到Student模型中时被激活。目的是使得任意有着设计好的patten的图片都被分类为target类别（如果student模型中恰好就包含了target类别的话）。实验部分针对信号灯识别，虹膜识别和公众人物的人脸识别做了实验验证。此外还提出了4中潜在的防御机制，发现仅一种是有效的，但分类的正确率会受影响。<br>一般而言，迁移学习增加了后门攻击的难度。因为往往针对的target类别在公开的teacher模型中还不存在，以及嵌入的触发机制在迁移学习过程中往往会遭到破坏。但本文设计的后门攻击是被嵌入在teacher模型中，针对的target标签也是一个在teacher模型中不存在的标签，然后经过迁移学习后门也不损坏，最终在student模型中被触发。<br>本文的方法在以下几方面优于前人：1）后门可以在teacher模型中一直潜伏，经过迁移学习也不受破坏。2）因为不针对在teacher模型中存在的标签，所以不会被普通的输入测试所发现。3）迁移学习可以放大后门的影响范围，因为每个student模型都暗含后门。4）攻击更先发制人，target标签可以由攻击者指定，并期待着在student模型上被激活，而传统的仅仅能从已经存在的标签中选择target标签。<br>攻击的设计包含源自两个事情：1）传统的后门直接将触发器和输出的分类标签相联系，而本文将触发和将导致某分类标签的中间层特征表示相联系。这样即使迁移学习后输出标签被改变也能被触发。2）嵌入触发来在深度神经网络的中间层产生一个匹配的特征表达，只要迁移学习没有改变到这一层就没有影响。</p>
+<h1 id="2-相关背景"><a href="#2-相关背景" class="headerlink" title="2 相关背景"></a>2 相关背景</h1><h2 id="2-1-DNN后门攻击"><a href="#2-1-DNN后门攻击" class="headerlink" title="2.1 DNN后门攻击"></a>2.1 DNN后门攻击</h2><p>Gu et al.通过毒化训练集来进行后门注入，通过给部分训练集加trigger pattern并将他们的标签设为目标标签，接下来用这些数据进行训练。<br>Liu et al.提出的方案需要更少的训练数据。他们试图构建对某些神经元有重要反应的特殊触发器。</p>
+<h2 id="2-2-现存的防御"><a href="#2-2-现存的防御" class="headerlink" title="2.2 现存的防御"></a>2.2 现存的防御</h2><p>Neuron Cleanse通过检查模型的输出标签并且逆向任何潜在的隐藏的触发器。直觉解释是对于被后门针对的那个标签而言，要使得这个标签下所有输入误分类的扰动应当比正常标签的小。<br>Activation Clustering。直觉解释是由毒化输入产生的被激活的神经元的pattern和正常的不一样 。<br>Fine-Pruning。是移除后门的方法。通过修建对分类最没用的冗余神经元，再用正常数据微调模型来维持模型的表现。</p>
+<h1 id="3-攻击细节"><a href="#3-攻击细节" class="headerlink" title="3 攻击细节"></a>3 攻击细节</h1><p>攻击者不要求有关于target标签的图片的具体知识，从 公共资源搜集到的图片就可以。teacher任务和student任务也不需要严格匹配。当两个任务不同时，攻击者仅需要再收集一些和student任务相似的任务的样本就行。攻击的操作在teacher模型上完成，不改变student模型的训练数据和过程。然后迁移学习中，有后门的teacher模型应该和正常的模型在正常数据集上表现一样。<br>攻击实施的主要挑战有以下两点：1）因为teacher模型没有目标标签，攻击者不能用现存的用目标标签的方法注入后门。2）因为迁移学习要改变部分的teacher模型，可能会打乱触发器和目标类别的联系。</p>
+<h2 id="3-1-攻击流程"><a href="#3-1-攻击流程" class="headerlink" title="3.1 攻击流程"></a>3.1 攻击流程</h2><p>步骤1：修改teacher模型使得输出的标签中含有目标标签yt。<br>攻击者用两个和目标任务相关的数据集来重新训练原来的teacher模型。一个数据是属于yt标签的干净的数据，记作目标数据Xyt，另一个是和目标任务相近的干净的数据，记作非目标数据集X\yt。然后用新的最后一层分类层替换掉原来的分类层。<br>步骤2：生成后门触发器$\Delta$。<br>这里给出来一系列备选的Kt值（指的是将要嵌入后门的哪个中间层）。然后对于攻击者指定的图片上某一区域和形状，计算触发器$\Delta$的纹理颜色等，使得对yt的效果最大化，这一步优化产生的触发器能够使任何输入的中间层Kt上的特征表示和yt标签下的干净样本的Kt层特征表示相似。<br>步骤3：注入后门触发器。<br>这一步骤中，攻击者用优化过程来更新模型权重，使得对抗样本的中间层表示和目标类别的中间层表示相匹配。过程中使用的数据集是干净的Xyt和加过pattern的X\yt。值得注意的是，选取能实验成功的尽可能小的Kt值，即层数越浅越好，从而使得迁移学习的过程尽量成功。<br>步骤4：从Teacher模型中除去yt的痕迹。<br>把最后的输出层再替换成原来的输出层，因为模型的权重已经变化了，攻击者可以在训练集上微调模型的最后一层权重。这样的结果就是模型还有着正常的准确率，但是已经被植入后门。</p>
+<h2 id="3-2-攻击中的优化公式"><a href="#3-2-攻击中的优化公式" class="headerlink" title="3.2 攻击中的优化公式"></a>3.2 攻击中的优化公式</h2><p>基于目标的触发器生成步骤（对应于步骤2）：<br>如前所述，这一步骤的优化目标是寻找一个触发器pattern$\Delta$，使得毒化的非目标样本和任意干净的目标样本在Kt中间层的特征表示向量间差别最小。公式表示如下图所示。<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/28/paper10/images/16.jpg" alt="公式"><br>其中计算差别使用的是平均平方差。需要注意的是，在这一步骤中不涉及到对teacher模型的改动。<br>后门注入步骤（对应于步骤3）：<br>攻击者更新teacher模型权重来进一步最小化中间层之间的差别。公式表示如下图：<br><img src="https://heqi867610481.github.io/KingNothing.github.io/KingNothing.github.io/2020/06/28/paper10/images/17.jpg" alt="公式"><br>其中损失函数的第一项是模型训练的标准损失函数，第二项最小化了毒化样本和目标样本中间层特征的差异。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://heqi867610481.github.io/KingNothing.github.io/2020/06/28/paper10/" data-id="ckczzvb1o00005kcpgnntf98l" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%90%8E%E9%97%A8%E6%94%BB%E5%87%BB/" rel="tag">后门攻击</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">神经网络</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/25/paper9/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">论文笔记：9   Neural Network Inversion in Adversarial Setting via Background Knowledge Alignment</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" rel="tag">人脸识别</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%90%8E%E9%97%A8%E6%94%BB%E5%87%BB/" rel="tag">后门攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" rel="tag">图像缩放算法</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">图神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" rel="tag">对抗攻击</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" rel="tag">对抗样本生成</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" rel="tag">目标检测</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="tag">神经网络</a></li><li class="tag-list-item"><a class="tag-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" rel="tag">论文</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E4%BA%BA%E8%84%B8%E8%AF%86%E5%88%AB/" style="font-size: 13.33px;">人脸识别</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%90%8E%E9%97%A8%E6%94%BB%E5%87%BB/" style="font-size: 10px;">后门攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E5%83%8F%E7%BC%A9%E6%94%BE%E7%AE%97%E6%B3%95/" style="font-size: 10px;">图像缩放算法</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">图神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%94%BB%E5%87%BB/" style="font-size: 13.33px;">对抗攻击</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E5%AF%B9%E6%8A%97%E6%A0%B7%E6%9C%AC%E7%94%9F%E6%88%90/" style="font-size: 16.67px;">对抗样本生成</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%9B%AE%E6%A0%87%E6%A3%80%E6%B5%8B/" style="font-size: 13.33px;">目标检测</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" style="font-size: 10px;">神经网络</a> <a href="https://heqi867610481.github.io/KingNothing.github.io/tags/%E8%AE%BA%E6%96%87/" style="font-size: 20px;">论文</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives/2020/06/">June 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="https://heqi867610481.github.io/KingNothing.github.io/archives/2020/05/">May 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/28/paper10/">论文笔记：10   Latent Backdoor Attacks on Deep Neural Networks</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/25/paper9/">论文笔记：9   Neural Network Inversion in Adversarial Setting via Background Knowledge Alignment</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/15/paper8/">论文笔记：8   CloudLeak：Large-Scale Deep Learning Models Stealing Through Adversarial Examples</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/06/10/paper7/">[object Object]</a>
+          </li>
+        
+          <li>
+            <a href="https://heqi867610481.github.io/KingNothing.github.io/2020/05/30/paper6/">论文笔记：6   Seeing isn’t Believing Towards More Robust Adversarial Attack Against Real World Object Detectors</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 Meiyi Jiang<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/" class="mobile-nav-link">Home</a>
+  
+    <a href="https://heqi867610481.github.io/KingNothing.github.io/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="https://heqi867610481.github.io/KingNothing.github.io/fancybox/jquery.fancybox.css">
+
+  
+<script src="https://heqi867610481.github.io/KingNothing.github.io/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="https://heqi867610481.github.io/KingNothing.github.io/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
